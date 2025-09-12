@@ -1,0 +1,208 @@
+.homeContainer {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #111;
+  color: white;
+  padding-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.masonryWrapper {
+  width: 100%;
+  padding: 20px;
+}
+
+/* Modal overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+}
+
+/* Modal content wrapper */
+.modalContent {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Modal Image */
+.modalImage {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+/* Tissue Title */
+.modalTitle {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  z-index: 1050;
+}
+
+/* Close Button */
+.closeBtn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 0, 0, 0.7);
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1100;
+  transition: background 0.2s;
+}
+.closeBtn:hover {
+  background: rgba(255, 0, 0, 0.9);
+}
+
+/* Arrow Controls */
+.arrowBtn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  padding: 0.6rem 1rem;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1100;
+  transition: background 0.2s;
+}
+.arrowBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+.arrowLeft {
+  left: 20px;
+}
+.arrowRight {
+  right: 20px;
+}
+
+/* Zoom Controls (bottom-right stacked) */
+.zoomControls {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1100;
+}
+
+.zoomControls button {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.zoomControls button:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modalTitle {
+    font-size: 1.2rem;
+    top: 15px;
+  }
+  .arrowBtn {
+    font-size: 1.5rem;
+  }
+  .zoomControls button {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modalTitle {
+    font-size: 1rem;
+    top: 10px;
+  }
+  .arrowBtn {
+    font-size: 1.2rem;
+  }
+  .zoomControls button {
+    font-size: 0.9rem;
+  }
+}
+/* Scrollable wrapper when zoomed */
+.imageWrapper {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 80vh;
+  max-width: 100%;
+}
+
+.imageWrapper.zoomed {
+  overflow: auto; /* enable scroll when zoom > 1 */
+  cursor: grab;
+}
+
+.modalImage {
+  transition: transform 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+/* Hide scrollbars but keep scrolling ability */
+
+.imageWrapper.zoomed {
+  overflow: auto;
+  cursor: grab; /* optional, gives visual cue for panning */
+  
+  /* Firefox */
+  scrollbar-width: none; /* hides scrollbar in Firefox */
+  -ms-overflow-style: none; /* IE 10+ / Edge */
+
+  /* WebKit browsers */
+}
+
+.imageWrapper.zoomed::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.imageWrapper.zoomed::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.imageWrapper.zoomed::-webkit-scrollbar-track {
+  background: transparent;
+}

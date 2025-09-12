@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+   
+}
+
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: white;
+  height: 100vh;
+  width: 100vw;
+  
+}
+.home-container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 2rem; /* space from top */
+}
+
+/* Dome wrapper exactly matching dome size */
+.dome-wrapper {
+  width: 60%;               /* same size as DomeGallery */
+  height: 80%;              /* same height for square */
+  border: 8px solid rgba(255, 255, 255, 0.85); /* visible border */
+  border-radius: 30px;        /* rounded edges */
+  overflow: hidden;           /* clips DomeGallery */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.3); /* optional glow */
+}
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #0a0a0a;
+}
+@media screen and (max-width: 768px) {
+  .dome-wrapper {
+    width: 90%;           /* nearly full width on small screens */
+    height: auto;         /* height adjusts to content */
+    aspect-ratio: 1 / 1;  /* keeps it square */
+    border-radius: 20px;  /* slightly less rounded */
+  }
+  
+}
