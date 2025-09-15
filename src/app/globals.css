@@ -3,9 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-   
 }
-
 
 @theme inline {
   --color-background: var(--background);
@@ -25,49 +23,312 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  background-color: white;
-  height: 100vh;
+  background-color: #0a0a0a;
+  margin: 0;
   width: 100vw;
-  
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto; /* allow scrolling */
 }
+
 .home-container {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+  width: 100%;
+  min-height: 100vh;   /* allow container to grow */
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 2rem; /* space from top */
+  padding-top: 100px; 
 }
 
-/* Dome wrapper exactly matching dome size */
 .dome-wrapper {
-  width: 60%;               /* same size as DomeGallery */
-  height: 80%;              /* same height for square */
-  border: 8px solid rgba(255, 255, 255, 0.85); /* visible border */
-  border-radius: 30px;        /* rounded edges */
-  overflow: hidden;           /* clips DomeGallery */
+  width: 60vw;
+  height: 65vh;
+  border: 0px solid rgba(255, 255, 255, 0.85);
+  border-radius: 30px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.3); /* optional glow */
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
 }
-body {
-  margin: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: #0a0a0a;
+
+nav,
+.dome-wrapper {
+  position: relative;
+  z-index: 1;
 }
+
+.light {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.content-layout {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 3rem;
+  width: 100%;
+  height: auto;  /* allow content to grow */
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.countup-flexbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+}
+
+.count-up-text {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+}
+
+.frosty-glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.countup-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.countup-number {
+  display: flex;
+  align-items: baseline;
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+}
+
+.plus-sign {
+  font-size: 2rem;
+  margin-left: 4px;
+  color: #00ffff;
+}
+
+.countup-label {
+  margin-top: 10px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.counter-column {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.search-bar {
+  position: absolute;
+  top: 80px;
+  right: 5%;
+  width: 30%;
+  z-index: 10;
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  color: #fff;
+}
+
+.search-input-wrapper .search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #fff;
+  pointer-events: none;
+}
+
+.featured-stains {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.stains-heading {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.stains-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.stain-card {
+  width: 280px;
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stain-overlay {
+  position: absolute;
+  bottom: 10px;
+  left: 15px;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 6px black;
+}
+
+.explore-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  margin-right: 5px;
+}
+
+.explore-btn {
+  background: linear-gradient(90deg, #00ffff, #0066ff);
+  border: none;
+  padding: 10px 18px;
+  font-size: 16px;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.explore-btn:hover {
+  background: linear-gradient(90deg, #0066ff, #00ffff);
+  transform: scale(1.05);
+}
+
+.counters-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Responsive CSS */
 @media screen and (max-width: 768px) {
-  .dome-wrapper {
-    width: 90%;           /* nearly full width on small screens */
-    height: auto;         /* height adjusts to content */
-    aspect-ratio: 1 / 1;  /* keeps it square */
-    border-radius: 20px;  /* slightly less rounded */
+  .home-container {
+    padding-top: 120px;
   }
-  
+
+  .search-bar {
+    top: 90px;
+    right: 50%;
+    transform: translateX(50%);
+    width: 90%;
+    text-align: center;
+  }
+
+  .search-input-wrapper input {
+    font-size: 14px;
+    padding: 8px 16px 8px 35px;
+  }
+
+  .search-input-wrapper .search-icon {
+    left: 10px;
+    font-size: 18px;
+  }
+
+  .content-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem;
+    height: auto;  /* allow scrolling */
+  }
+
+  .dome-wrapper {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+  }
+
+  .counters-wrapper {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .countup-flexbox {
+    width: 45%;
+    height: 150px;
+  }
+
+  .countup-number {
+    font-size: 2.5rem;
+  }
+
+  .countup-label {
+    font-size: 1.2rem;
+  }
+
+  .featured-stains {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .stains-grid {
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .stain-card {
+    width: 45%;
+    height: 150px;
+  }
+
+  .stain-overlay {
+    font-size: 14px;
+    bottom: 8px;
+    left: 10px;
+  }
+
+  .explore-btn-container {
+    margin-top: 10px;
+    margin-right: 0;
+    justify-content: center;
+  }
 }

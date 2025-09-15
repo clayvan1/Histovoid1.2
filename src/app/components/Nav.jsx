@@ -13,7 +13,7 @@ export default function Navbar() {
     <>
       {/* Navbar with centered title */}
       <GlassSurface
-        width="70%"
+        width="89%"
         height="60px"
         borderRadius={20}
         

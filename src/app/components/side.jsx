@@ -21,142 +21,173 @@ const navItems = [
   {
     label: "EPITHELIAL TISSUE",
     subLinks: [
-      { label: "Web Apps", path: "/epithelial/web" },
-      { label: "Mobile Apps", path: "/epithelial/mobile" },
-      { label: "Design", path: "/epithelial/design" },
+      { label: "SQUAMOUS", path: "/epithelial/web" },
+      { label: "CUBOIDAL", path: "/epithelial/web" },
+      { label: "COLUMNAR", path: "/epithelial/web" },
+      { label: "TRANSITIONAL", path: "/epithelial/web" },
     ],
   },
   {
     label: "CONNECTIVE TISSUE",
     subLinks: [
-      { label: "Dashboard", path: "/analytics/dashboard" },
-      { label: "Reports", path: "/analytics/reports" },
+      { label: "EMBRYONIC", path: "/analytics/dashboard" },
+      { label: "CONNECTIVE TISSUE PROPER", path: "/analytics/reports" },
+      { label: "SPECIALIZED", path: "/analytics/reports" },
     ],
   },
   {
     label: "CARTILAGE",
     subLinks: [
-      { label: "Email Us", path: "/contact/email" },
-      { label: "Our Location", path: "/contact/location" },
+      { label: "HYALINE", path: "/contact/email" },
+      { label: "FIBROUS", path: "/contact/location" },
+      { label: "ELASTIC", path: "/contact/location" },
     ],
   },
   {
     label: "BONE",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "TRABECULAR", path: "/account/profile" },
+      { label: "SPONGY", path: "/account/settings" },
+      { label: "GROWTH PLATES", path: "/account/settings" },
     ],
   },
   {
     label: "NERVOUS TISSUE",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
-    ],
-  },
-  {
-    label: "BONE",
-    subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "PYRAMIDAL", path: "/account/profile" },
+      { label: "STELLATE", path: "/account/settings" },
+      { label: "PURKINJE", path: "/account/settings" },
+      { label: "DORSAL ROOT GANGLION", path: "/account/settings" },
     ],
   },
   {
     label: "PROPULSION TISSUE",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "SKELETAL", path: "/account/profile" },
+      { label: "CARDIAC", path: "/account/settings" },
+      { label: "SMOOTH", path: "/account/settings" },
     ],
   },
   {
     label: "SKIN AND APPENDAGES",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "SKIN", path: "/account/profile" },
+      { label: "PILOSABACEOUS UNIT", path: "/account/settings" },
+      { label: "NAIL", path: "/account/settings" },
     ],
   },
   {
     label: "NERVOUS SYSTEM",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "CEREBRAL CORTEX", path: "/account/profile" },
+      { label: "BRAIN STEM", path: "/account/settings" },
+      { label: "CEREBELLUM", path: "/account/profile" },
+      { label: "SPINAL CORD", path: "/account/settings" },
+      { label: "PERIPHERAL NERVE", path: "/account/profile" },
+      
     ],
   },
   {
     label: "RECEPTORS SYSTEM",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "GENERAL RECEPTORS", path: "/account/profile" },
+      { label: "OLFACTORY", path: "/account/settings" },
+      { label: "RETINA", path: "/account/profile" },
+      { label: "TASTE BUDS", path: "/account/settings" },
+      { label: "ORGAN OF CORTI", path: "/account/settings" },
     ],
   },
   {
     label: "EAR",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "INTERNAL EAR", path: "/account/profile" },
+    
     ],
   },
   {
     label: "EYE",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "SCLERA", path: "/account/profile" },
+      { label: "CORNEA", path: "/account/settings" },
+      { label: "VASCULAR LAYER", path: "/account/profile" },
+      { label: "RETINA", path: "/account/settings" },
+      { label: "LENS", path: "/account/profile" },
+      { label: "CONJUCTIVA", path: "/account/settings" },
+      { label: "LACRIMAL", path: "/account/settings" },
     ],
   },
   {
     label: "ENDOCRINE SYSTEM",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "PITUITARY", path: "/account/profile" },
+      { label: "PINEAL", path: "/account/settings" },
+      { label: "THYROID", path: "/account/profile" },
+      { label: "PARATHROID", path: "/account/settings" },
+      { label: "ADRENAL", path: "/account/profile" },
+      
     ],
   },
   {
     label: "GIT",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "LIP", path: "/account/profile" },
+      { label: "OESAPHAGUS", path: "/account/settings" },
+      { label: "STOMACH", path: "/account/profile" },
+      { label: "SMALL INTESTINES", path: "/account/settings" },
+      { label: "LARGE INTESTINES", path: "/account/settings" },
+      { label: "RECTUM", path: "/account/settings" },
+      { label: "ANLA CANAL", path: "/account/settings" },
     ],
   },
   {
     label: "GIT GLANDS",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "SALIVARY GLANDS", path: "/account/profile" },
+      { label: "PANCREASE", path: "/account/settings" },
+      { label: "LIVER", path: "/account/profile" },
+      { label: "GALLBLADDER", path: "/account/settings" },
     ],
   },
   {
     label: "RESPIRATORY SYSTEM",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "NASAL CAVITY", path: "/account/profile" },
+      { label: "LARYNX", path: "/account/settings" },
+      { label: "TRACHEA", path: "/account/profile" },
+      { label: "LUNG", path: "/account/settings" },
     ],
   },
   {
     label: "CARDIOVASCULAR SYSTEM",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "BLOOD VESSEL", path: "/account/profile" },
+      { label: "  HEART", path: "/account/settings" },
     ],
   },
   {
     label: "IMMUNE SYSTEM",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "LYMP NODE", path: "/account/profile" },
+      { label: "SPLEEN", path: "/account/settings" },
+      { label: "THYMUS", path: "/account/profile" },
+      { label: "BONE MARROW", path: "/account/settings" },
     ],
   },
   {
     label: "URINARY SYSTEM",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "KIDNEY", path: "/account/profile" },
+      { label: "NEPHRON", path: "/account/settings" },
+      { label: "URETER", path: "/account/profile" },
+      { label: "URINARY BLADDER", path: "/account/settings" },
+      { label: "URETHRA", path: "/account/settings" },
     ],
   },
   {
     label: "REPRODUCTIVE SYSTEM",
     subLinks: [
-      { label: "Profile", path: "/account/profile" },
-      { label: "Settings", path: "/account/settings" },
+      { label: "MALE", path: "/account/profile" },
+      { label: "FEMALE", path: "/account/settings" },
     ],
   },
 ];
@@ -172,20 +203,7 @@ export default function Sidebar({ open, setOpen }) {
 
   return (
     <div className={sidebarClassName}>
-      <GlassSurface
-        width="100%"
-        height="100%"
-        borderRadius={0}
-        displace={15}
-        distortionScale={-150}
-        redOffset={5}
-        greenOffset={15}
-        blueOffset={25}
-        brightness={60}
-        opacity={0.85}
-        mixBlendMode="screen"
-        className="sidebar-content"
-      >
+     
         <div className="sidebar-scroll-area">
           <nav className="sidebar-nav">
             {navItems.map((item, index) => (
@@ -239,7 +257,7 @@ export default function Sidebar({ open, setOpen }) {
             ))}
           </nav>
         </div>
-      </GlassSurface>
+      
     </div>
   );
 }

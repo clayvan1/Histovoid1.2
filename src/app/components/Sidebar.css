@@ -1,13 +1,14 @@
-/* Using :root for variables makes it easy to change core styles later */
+/* 🎨 Core variables */
 :root {
   --sidebar-width: 350px;
-   --text-primary: #ffffff;   /* solid white */
-  --text-secondary: #d9d9d9;--bg-hover: rgba(255, 255, 255, 0.1);
-  --transition-speed-fast: 200ms;
-  --transition-speed-medium: 300ms;
+  --text-primary: #ffffff;          /* solid white */
+  --text-secondary: #d9d9d9;
+  --bg-hover: rgba(255, 255, 255, 0.1);
+  --transition-speed-fast: 0.2s;
+  --transition-speed-medium: 0.3s;
 }
 
-/* Main container for the slide-in/out functionality */
+/* Sidebar wrapper (slide in/out) */
 .sidebar-container {
   position: fixed;
   top: 0;
@@ -15,44 +16,52 @@
   height: 100%;
   width: var(--sidebar-width);
   z-index: 40;
+
+  /* Slide in/out */
   transform: translateX(-100%);
   transition: transform var(--transition-speed-medium) ease-in-out;
+
+  /* Frosted glass effect (more opaque) */
+  background: rgba(20, 20, 20, 0.6); /* darker + more opacity */
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* This class is added dynamically to show the sidebar */
+.sidebar-container.open {
+  transform: translateX(0);
+}
 .sidebar-container.open {
   transform: translateX(0);
 }
 
-/* The main content area inside the GlassSurface component */
+/* Sidebar content */
 .sidebar-content {
   display: flex;
   flex-direction: column;
-  /* Removed justify-content to allow content to start from the top */
-  padding: 1rem;
+  padding: 200px 1rem 5rem; /* top, sides, bottom */
   height: 100%;
-  padding-top: 3rem;
-  padding-bottom: 5rem;
+  
   
 }
 
-/* Scrollable area for the navigation links */
+/* Scrollable nav area */
 .sidebar-scroll-area {
   flex-grow: 1;
   overflow-y: auto;
-  padding-right: 0.5rem; /* For scrollbar spacing */
-  /* Added padding to the top to move the list down slightly */
+  padding-right: 0.5rem;
   padding-top: 4rem;
   height: 100vh;
 }
 
+/* Nav styles */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem; /* Replaces space-y-2 */
+  gap: 0.5rem;
+  padding-top: 50px;
 }
 
-/* Styles for each main navigation link */
 .nav-link {
   display: flex;
   align-items: center;
@@ -62,11 +71,13 @@
   cursor: pointer;
   text-decoration: none;
   color: var(--text-primary);
-  transition: background-color var(--transition-speed-fast) ease-in-out;
+  transition: background-color var(--transition-speed-fast) ease-in-out,
+              transform var(--transition-speed-medium) ease-in-out;
 }
 
 .nav-link:hover {
   background-color: var(--bg-hover);
+  transform: translateX(5px); /* slight slide on hover */
 }
 
 .nav-link-content {
@@ -81,120 +92,78 @@
 }
 
 .nav-label {
-  font-weight: 600; /* semibold */
+  font-weight: 600;
+  color: var(--text-primary);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
-/* The arrow icon that indicates a dropdown */
+/* Dropdown arrow */
 .dropdown-arrow {
   transition: transform var(--transition-speed-medium) ease-in-out;
 }
 
-/* This class is added dynamically to rotate the arrow */
 .dropdown-arrow.open {
   transform: rotate(180deg);
 }
 
-/* Container for the sub-menu items */
+/* Submenu container */
 .submenu {
   overflow: hidden;
   max-height: 0;
-  transition: max-height var(--transition-speed-medium) ease-in-out;
+  opacity: 0;
+  transition: max-height var(--transition-speed-medium) ease-in-out,
+              opacity var(--transition-speed-medium) ease-in-out;
 }
 
-/* This class is added dynamically to expand the submenu */
 .submenu.open {
-  max-height: 500px; /* A large enough value to show all items */
+  max-height: 500px;
+  opacity: 1;
 }
 
+/* Submenu list */
 .submenu-list {
   display: flex;
   flex-direction: column;
-  padding-left: 3rem; /* Indent sub-items */
+  padding-left: 3rem;
   padding-top: 0.5rem;
   gap: 0.5rem;
 }
 
+/* Submenu links */
 .submenu-link {
   padding: 0.25rem 0;
   color: var(--text-secondary);
   text-decoration: none;
-  transition: color var(--transition-speed-fast);
+  transition: color var(--transition-speed-fast) ease-in-out,
+              transform var(--transition-speed-medium) ease-in-out,
+              opacity var(--transition-speed-medium) ease-in-out;
+  opacity: 0;
+  transform: translateX(-10px);
 }
 
-.submenu-link:hover {
-  color: var(--text-primary);
-}
-/* Scrollable area for the navigation links */
-.sidebar-scroll-area {
-  flex-grow: 1;
-  overflow-y: auto;
-   /* For scrollbar spacing */
-  /* padding-top: 1.5rem;  <-- You can comment it out like this */
-}
-/* Submenu container with smooth transition */
-.submenu {
-  overflow: hidden;
-  max-height: 0;       /* Collapsed by default */
-  opacity: 0;          /* Fade out collapsed items */
-  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+/* Smooth fade + slide-in when submenu opens */
+.submenu.open .submenu-link {
+  opacity: 1;
+  transform: translateX(0);
 }
 
-/* Submenu open state */
-.submenu.open {
-  max-height: 500px;   /* Large enough to fit all submenu items */
-  opacity: 1;          /* Fade in */
-}
-
-/* Submenu list styling */
-.submenu-list {
-  display: flex;
-  flex-direction: column;
-  padding-left: 3rem;  /* Indent sub-items */
-  padding-top: 0.5rem;
-  gap: 0.5rem;
-}
-
-/* Submenu link styling */
-.submenu-link {
-  padding: 0.25rem 0;
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.2s ease-in-out;
-}
-
-.submenu-link:hover {
-  color: var(--text-primary);
-}
-
-/* Arrow rotation when submenu is open */
-.dropdown-arrow {
-  transition: transform 0.3s ease-in-out;
-}
-
-.dropdown-arrow.open {
-  transform: rotate(180deg);
-}
-/* 🎨 Custom WebKit Scrollbar Styling */
+/* Scrollbar styling */
 .sidebar-scroll-area::-webkit-scrollbar {
-  width: 8px;              /* scrollbar width */
+  width: 8px;
 }
 
 .sidebar-scroll-area::-webkit-scrollbar-track {
-  background: transparent; /* track background */
+  background: transparent;
 }
 
 .sidebar-scroll-area::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.15); /* thumb color */
-  border-radius: 10px;                         /* rounded edges */
-  border: 2px solid transparent;               /* padding illusion */
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  border: 2px solid transparent;
   background-clip: content-box;
+  transition: background-color var(--transition-speed-fast) ease-in-out;
 }
 
 .sidebar-scroll-area::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.3);  /* brighter on hover */
-}
-.nav-label,
-.submenu-link {
-  color: #ffffff; /* solid white */
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); /* subtle black outline */
+  background-color: rgba(255, 255, 255, 0.3);
 }
