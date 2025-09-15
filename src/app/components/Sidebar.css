@@ -21,13 +21,12 @@
   transform: translateX(-100%);
   transition: transform var(--transition-speed-medium) ease-in-out;
 
-  /* Frosted glass effect (more opaque) */
-  background: rgba(20, 20, 20, 0.6); /* darker + more opacity */
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  /* Frosted glass effect (darker + more opaque) */
+  background: rgba(20, 20, 20, 0.4); /* Reduced opacity for a darker look */
+  backdrop-filter: blur(25px) saturate(180%) brightness(0.5); /* Increased blur and added brightness filter */
+  -webkit-backdrop-filter: blur(25px) saturate(180%) brightness(0.5);
   border-right: 1px solid rgba(255, 255, 255, 0.15);
 }
-
 .sidebar-container.open {
   transform: translateX(0);
 }
@@ -139,6 +138,7 @@
               opacity var(--transition-speed-medium) ease-in-out;
   opacity: 0;
   transform: translateX(-10px);
+  
 }
 
 /* Smooth fade + slide-in when submenu opens */

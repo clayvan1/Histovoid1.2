@@ -61,10 +61,16 @@ const Masonry = ({
   hoverScale = 1.03,
   blurToFocus = true,
 }) => {
+  // ✅ Updated breakpoints: always at least 2 columns
   const columns = useMedia(
-    ["(min-width: 1500px)", "(min-width: 1000px)", "(min-width: 600px)", "(min-width: 400px)"],
+    [
+      "(min-width: 1500px)",
+      "(min-width: 1000px)",
+      "(min-width: 600px)",
+      "(min-width: 400px)",
+    ],
     [5, 4, 3, 2],
-    1
+    2 // default always 2 columns
   );
 
   const [containerRef, { width }] = useMeasure();
@@ -110,7 +116,6 @@ const Masonry = ({
 
     gridItems.forEach((item, index) => {
       const selector = `[data-key="${item.id}"]`;
-      const initialPos = { x: item.x, y: item.y };
       const initialState = {
         opacity: 0,
         x: item.x,
@@ -160,7 +165,7 @@ const Masonry = ({
           key={item.id}
           data-key={item.id}
           className="item-wrapper"
-          onClick={item.onClick} // ✅ call parent onClick (modal)
+          onClick={item.onClick}
           onMouseEnter={() => handleMouseEnter(item)}
           onMouseLeave={() => handleMouseLeave(item)}
         >
