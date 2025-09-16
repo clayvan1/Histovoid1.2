@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import "../globals.css";
 import styles from "./FeaturedMasonry.module.css";
-
+import GradientText from "../components/GradientText";
 import { IMAGE_DATA } from "../../../data.js";
 
 const Navbar = dynamic(() => import("../components/Nav"), { ssr: false, loading: () => null });
@@ -142,15 +142,16 @@ export default function CategoryPage() {
 
       <Navbar />
 
-      <div className="top">
-        <TrueFocus
-          sentence={`${category} Tissue`}
-          manualMode={false}
-          blurAmount={5}
-          borderColor="red"
-          animationDuration={2}
-          pauseBetweenAnimations={1}
-        />
+      <div className="Tope">
+        <GradientText
+  colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+  animationSpeed={3}
+  showBorder={false}
+  className="Tope"
+>
+  {`${category} Tissue`}
+</GradientText>
+
       </div>
 
       <div className={styles.masonryWrapper}>

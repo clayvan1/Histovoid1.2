@@ -12,6 +12,7 @@
   transition: box-shadow 0.5s ease-out;
   overflow: hidden;
   cursor: pointer;
+  font-size: 2rem;
 }
 
 .gradient-overlay {
