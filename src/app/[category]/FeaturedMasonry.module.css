@@ -1,19 +1,20 @@
 .homeContainer {
   width: 100vw;
   min-height: 100vh;
-  background-color: #111;
+  
   color: white;
   padding-top: 100px;
   display: flex;
   flex-direction: column;
-  
- background-color: #0a0a0a; /* very dark gray / black */
+  align-items: center;
+ overflow-x: hidden;
+ /* very dark gray / black */
 
 }
 
 .masonryWrapper {
   width: 100%;
-  padding: 20px;
+
 }
 
 /* Modal overlay */
@@ -209,7 +210,14 @@
   background: transparent;
 }
 body{
-  overflow-y: hidden;
+  overflow-x: hidden;
 }
-
-
+.darkVeil {
+  position: fixed; /* FIXED keeps it always behind content */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* behind all content */
+  pointer-events: none; /* so clicks pass through */
+}
