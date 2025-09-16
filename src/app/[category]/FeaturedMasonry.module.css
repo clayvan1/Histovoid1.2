@@ -190,7 +190,7 @@
   overflow: auto;
   cursor: grab; /* optional, gives visual cue for panning */
   
-  /* Firefox */
+  
   scrollbar-width: none; /* hides scrollbar in Firefox */
   -ms-overflow-style: none; /* IE 10+ / Edge */
 
