@@ -7,11 +7,11 @@ import LightRays from "./components/LightRays";
 import GlassSurface from "./components/GlassSurface";
 import CountUp from "./components/CountUP";
 import GradientText from "./components/GradientText";
-import Link from "next/link"; 
-import "./globals.css";
+import Link from "next/link";
 import { FiSearch } from "react-icons/fi";
 import SearchModal from "./components/SearchModal";
-import LoadingOverlay from "./components/LoadingOverlay"; // ✅ import overlay
+import LoadingOverlay from "./components/LoadingOverlay"; // ✅ overlay
+import "./globals.css";
 
 export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -23,7 +23,12 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Optional: show overlay during search modal opening (or route changes)
+  // Block scroll only while loading overlay is active
+  useEffect(() => {
+    document.body.style.overflow = loading ? "hidden" : "auto";
+    return () => { document.body.style.overflow = "auto"; };
+  }, [loading]);
+
   const openSearch = () => setIsSearchOpen(true);
 
   return (
@@ -52,7 +57,7 @@ export default function Home() {
       {/* 🔎 Floating Search Bar */}
       <div className="search-bar">
         <div className="search-input-wrapper" onClick={openSearch}>
-          <input type="text" placeholder="Search slides..." readOnly /> 
+          <input type="text" placeholder="Search slides..." readOnly />
           <FiSearch className="search-icon" />
         </div>
       </div>
