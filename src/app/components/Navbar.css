@@ -10,7 +10,7 @@
   padding: 0 2rem; /* px-8 */
   z-index: 50;
   border-radius: 20px;
-  
+  z-index: 9999;
   background: rgba(255, 255, 255, 0.1);
   
   

@@ -10,7 +10,6 @@ import { IoIosArrowDown } from "react-icons/io";
 // ✅ Next.js router
 import Link from "next/link";
 
-// Updated data structure: Home has no subLinks
 const navItems = [
   {
     label: "Home",
@@ -190,7 +189,8 @@ const navItems = [
       { label: "FEMALE", path: "/reproductive" },
     ],
   },
-];
+]; // Your navItems here (omitted for brevity)...
+// Your navItems here (omitted for brevity)...
 
 export default function Sidebar({ open, setOpen }) {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -202,15 +202,22 @@ export default function Sidebar({ open, setOpen }) {
   const sidebarClassName = `sidebar-container ${open ? "open" : ""}`;
 
   return (
-    <div className={sidebarClassName}>
-     
+    <>
+      {/* Full-page blur overlay */}
+      {open && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      <div className={sidebarClassName}>
         <div className="sidebar-scroll-area">
           <nav className="sidebar-nav">
             {navItems.map((item, index) => (
               <div className="nav-item" key={index}>
                 {item.subLinks ? (
                   <>
-                    {/* Dropdown items */}
                     <div
                       onClick={() => handleDropdownToggle(index)}
                       className="nav-link"
@@ -237,6 +244,7 @@ export default function Sidebar({ open, setOpen }) {
                             key={subIndex}
                             href={subLink.path}
                             className="submenu-link"
+                            onClick={() => setOpen(false)}
                           >
                             {subLink.label}
                           </Link>
@@ -245,8 +253,7 @@ export default function Sidebar({ open, setOpen }) {
                     </div>
                   </>
                 ) : (
-                  // Direct link (e.g. Home)
-                  <Link href={item.path} className="nav-link direct-link">
+                  <Link href={item.path} className="nav-link direct-link" onClick={() => setOpen(false)}>
                     <div className="nav-link-content">
                       <span className="nav-icon">{item.icon}</span>
                       <span className="nav-label">{item.label}</span>
@@ -257,7 +264,7 @@ export default function Sidebar({ open, setOpen }) {
             ))}
           </nav>
         </div>
-      
-    </div>
+      </div>
+    </>
   );
 }
