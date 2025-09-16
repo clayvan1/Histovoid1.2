@@ -1,18 +1,36 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import DomeGallery from "./components/DomeGallery";
 import Navbar from "./components/Nav";
 import LightRays from "./components/LightRays";
 import GlassSurface from "./components/GlassSurface";
 import CountUp from "./components/CountUP";
 import GradientText from "./components/GradientText";
-import Link from "next/link"; // ✅ for navigation
+import Link from "next/link"; 
 import "./globals.css";
 import { FiSearch } from "react-icons/fi";
+import SearchModal from "./components/SearchModal";
+import LoadingOverlay from "./components/LoadingOverlay"; // ✅ import overlay
 
 export default function Home() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Hide overlay after initial page load
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800); // adjust duration if needed
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Optional: show overlay during search modal opening (or route changes)
+  const openSearch = () => setIsSearchOpen(true);
+
   return (
     <div className="home-container">
+      {/* Loading Overlay */}
+      <LoadingOverlay isLoading={loading} />
+
       {/* Background LightRays */}
       <div className="light">
         <LightRays
@@ -28,19 +46,21 @@ export default function Home() {
         />
       </div>
 
+      {/* Navbar */}
       <Navbar />
 
       {/* 🔎 Floating Search Bar */}
-<div className="search-bar">
-  <div className="search-input-wrapper">
-    <input type="text" placeholder="Search slides..." />
-    <FiSearch className="search-icon" />
-  </div>
-</div>      {/* Main Content */}
+      <div className="search-bar">
+        <div className="search-input-wrapper" onClick={openSearch}>
+          <input type="text" placeholder="Search slides..." readOnly /> 
+          <FiSearch className="search-icon" />
+        </div>
+      </div>
+
+      {/* Main Content */}
       <div className="content-layout">
         {/* Left Counters */}
         <div className="counters-wrapper">
-          {/* Slides counter */}
           <GlassSurface
             className="countup-flexbox frosty-glass"
             displace={15}
@@ -65,7 +85,6 @@ export default function Home() {
             </div>
           </GlassSurface>
 
-          {/* Tissues counter */}
           <GlassSurface
             className="countup-flexbox frosty-glass"
             displace={15}
@@ -114,7 +133,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 🚀 Start Exploring button */}
           <div className="explore-btn-container">
             <Link href="/epithelial/web" passHref>
               <button className="explore-btn">Start Exploring →</button>
@@ -122,6 +140,10 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Search Modal */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </div>
   );
 }
+

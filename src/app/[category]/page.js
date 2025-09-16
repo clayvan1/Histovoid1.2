@@ -1,69 +1,76 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import "../../globals.css";
+import "../globals.css";
 import styles from "./FeaturedMasonry.module.css";
 
-// Import global IMAGE_DATA
-import {IMAGE_DATA} from "../../../data.js";
- // ✅ adjust path if needed
+import { IMAGE_DATA } from "../../../data.js";
 
-// Dynamically import components to prevent server-side errors
-const Navbar = dynamic(() => import("../../components/Nav"), {
-  ssr: false,
-  loading: () => null,
-});
+const Navbar = dynamic(() => import("../components/Nav"), { ssr: false, loading: () => null });
+const TrueFocus = dynamic(() => import("../components/TrueFocus"), { ssr: false, loading: () => null });
+const Masonry = dynamic(() => import("../components/Masonry"), { ssr: false, loading: () => <p>Loading gallery...</p> });
+const LoadingOverlay = dynamic(() => import("../components/LoadingOverlay"), { ssr: false }); // ✅ loading overlay
 
-const TrueFocus = dynamic(() => import("../../components/TrueFocus"), {
-  ssr: false,
-  loading: () => null,
-});
+export default function CategoryPage() {
+  const { category } = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const imgId = searchParams.get("img");
 
-const Masonry = dynamic(() => import("../../components/Masonry"), {
-  ssr: false,
-  loading: () => <p>Loading gallery...</p>,
-});
-
-export default function EpithelialWebPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
+  const [loading, setLoading] = useState(true);
 
-  // ✅ Filter images by category
-  const items = IMAGE_DATA.filter((img) => img.category === "Receptors" || img.category === "Endocrine" || img.category === "Urinary" || img.category === "Skin");
+  // Filter images for this category
+  const items = IMAGE_DATA.filter((img) => img.category.toLowerCase() === category.toLowerCase());
 
+  // Simulate page loading
   useEffect(() => {
-    if (modalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
+    const timer = setTimeout(() => setLoading(false), 600); // adjust duration if needed
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Open modal if query param exists
+  useEffect(() => {
+    if (imgId && items.length > 0) {
+      const index = items.findIndex((img) => img.id.toString() === imgId);
+      if (index !== -1) {
+        setCurrentIndex(index);
+        setModalOpen(true);
+
+        // Remove ?img from URL while staying on the same page
+        const cleanPath = `/${category}`;
+        router.replace(cleanPath, { scroll: false });
+      }
     }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [modalOpen]);
+  }, [imgId, items, category, router]);
 
-  const openModal = (index) => {
-    setCurrentIndex(index);
-    setZoom(1);
-    setModalOpen(true);
-  };
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    document.body.style.overflow = modalOpen || loading ? "hidden" : "auto";
+    return () => { document.body.style.overflow = "auto"; };
+  }, [modalOpen, loading]);
 
+  const openModal = (index) => { setCurrentIndex(index); setZoom(1); setModalOpen(true); };
   const closeModal = () => setModalOpen(false);
-
   const nextImage = () => setCurrentIndex((prev) => (prev + 1) % items.length);
   const prevImage = () => setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
-
   const zoomIn = () => setZoom((prev) => Math.min(prev + 0.25, 3));
   const zoomOut = () => setZoom((prev) => Math.max(prev - 0.25, 1));
 
   return (
     <div className={styles.homeContainer}>
+      {/* Full-page loading overlay */}
+      <LoadingOverlay isLoading={loading} />
+
       <Navbar />
+
       <div className="top">
         <TrueFocus
-          sentence="Epithelial Tissue"
+          sentence={`${category} Tissue`}
           manualMode={false}
           blurAmount={5}
           borderColor="red"
@@ -89,28 +96,13 @@ export default function EpithelialWebPage() {
         />
       </div>
 
-      {modalOpen && (
+      {/* Image Modal */}
+      {modalOpen && items.length > 0 && (
         <div className={styles.modalOverlay} onClick={closeModal}>
           <div className={styles.modalTitle}>{items[currentIndex].title}</div>
           <button className={styles.closeBtn} onClick={closeModal}>✕</button>
-          <button
-            className={`${styles.arrowBtn} ${styles.arrowLeft}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              prevImage();
-            }}
-          >
-            ‹
-          </button>
-          <button
-            className={`${styles.arrowBtn} ${styles.arrowRight}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              nextImage();
-            }}
-          >
-            ›
-          </button>
+          <button className={`${styles.arrowBtn} ${styles.arrowLeft}`} onClick={(e) => { e.stopPropagation(); prevImage(); }}>‹</button>
+          <button className={`${styles.arrowBtn} ${styles.arrowRight}`} onClick={(e) => { e.stopPropagation(); nextImage(); }}>›</button>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={`${styles.imageWrapper} ${zoom > 1 ? styles.zoomed : ""}`}>
               <Image

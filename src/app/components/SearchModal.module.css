@@ -1,0 +1,150 @@
+/* Overlay still covers the page */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.6); /* dark blur background */
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center; /* horizontal center */
+  align-items: flex-start; /* push to top */
+  padding-top: 80px; /* space from top */
+  z-index: 1000;
+}
+
+/* Modal box positioning */
+.modalBox {
+  background: rgba(0, 0, 0, 0.85); /* black background */
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  color: white;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Search input */
+.searchInput {
+  width: 100%;
+  padding: 14px 45px 14px 18px;
+  border: 2px solid #444;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  background: #000; /* solid black */
+  color: #fff;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.searchInput:focus {
+  border-color: #00bcd4;
+}
+
+/* Close button */
+.closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+/* Input wrapper with icon */
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  background: #000;
+  border: 2px solid #444;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.searchIcon {
+  color: #aaa;
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+/* Search input */
+.searchInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 1rem;
+}
+
+/* Spinner */
+.spinner {
+  border: 4px solid #333;
+  border-top: 4px solid #00ffff;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Results list */
+.resultsList {
+  margin-top: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+}
+
+/* Webkit scrollbar */
+.resultsList::-webkit-scrollbar {
+  width: 8px;
+}
+.resultsList::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+.resultsList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.resultsList li {
+  padding: 0.6rem;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.resultsList li:hover {
+  background: #222;
+}
+
+.resultTitle {
+  font-weight: 500;
+  color: white;
+}
+
+.resultCategory {
+  margin-left: 8px;
+  opacity: 0.6;
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.noResults {
+  text-align: center;
+  padding: 1rem;
+  color: #aaa;
+}
