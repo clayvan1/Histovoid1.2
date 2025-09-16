@@ -134,7 +134,7 @@ export default function Home() {
           </div>
 
           <div className="explore-btn-container">
-            <Link href="/epithelial/web" passHref>
+            <Link href="/epithelium" passHref>
               <button className="explore-btn">Start Exploring →</button>
             </Link>
           </div>
