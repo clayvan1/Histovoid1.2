@@ -13,6 +13,9 @@ import SearchModal from "./components/SearchModal";
 import LoadingOverlay from "./components/LoadingOverlay"; // ✅ overlay
 import "./globals.css";
 
+
+import Footer from "./components/Footer"; // ✅ footer
+
 export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -148,6 +151,7 @@ export default function Home() {
 
       {/* Search Modal */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+        <Footer/>
     </div>
   );
 }

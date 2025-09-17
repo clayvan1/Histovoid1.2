@@ -7,7 +7,7 @@ import "../globals.css";
 import styles from "./FeaturedMasonry.module.css";
 import GradientText from "../components/GradientText";
 import { IMAGE_DATA } from "../../../data.js";
-
+import Footers from "../components/Footers";
 const Navbar = dynamic(() => import("../components/Nav"), { ssr: false, loading: () => null });
 const Masonry = dynamic(() => import("../components/Masonry"), { ssr: false, loading: () => <p>Loading gallery...</p> });
 const LoadingOverlay = dynamic(() => import("../components/LoadingOverlay"), { ssr: false });
@@ -228,6 +228,7 @@ export default function CategoryPage() {
           </div>
         </div>
       )}
+      <Footers />
     </div>
   );
 }

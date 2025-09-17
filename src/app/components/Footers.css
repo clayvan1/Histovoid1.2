@@ -1,0 +1,27 @@
+.footers {
+  padding: 20px;
+   /* Dark footer */
+  color: #ccc;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-center {
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Blue glowing text */
+.glows {
+  color: #40a9ff;
+  text-shadow: 0 0 6px #40a9ff, 0 0 12px #40a9ff;
+  font-weight: bold;
+}
+
+/* Light blue glowing heart */
+.heart-glow {
+  color: #40a9ff;
+  text-shadow: 0 0 6px #40a9ff, 0 0 12px #40a9ff, 0 0 16px #40a9ff;
+}
