@@ -9,7 +9,6 @@ import GradientText from "../components/GradientText";
 import { IMAGE_DATA } from "../../../data.js";
 
 const Navbar = dynamic(() => import("../components/Nav"), { ssr: false, loading: () => null });
-const TrueFocus = dynamic(() => import("../components/TrueFocus"), { ssr: false, loading: () => null });
 const Masonry = dynamic(() => import("../components/Masonry"), { ssr: false, loading: () => <p>Loading gallery...</p> });
 const LoadingOverlay = dynamic(() => import("../components/LoadingOverlay"), { ssr: false });
 
@@ -23,6 +22,9 @@ export default function CategoryPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [loading, setLoading] = useState(true);
+
+  // Spinner for modal image
+  const [imageLoading, setImageLoading] = useState(false);
 
   // Drag-to-pan state
   const [dragging, setDragging] = useState(false);
@@ -58,6 +60,7 @@ export default function CategoryPage() {
     setCurrentIndex(index);
     setZoom(1);
     setOffset({ x: 0, y: 0 });
+    setImageLoading(true); // start spinner
     setModalOpen(true);
   };
 
@@ -66,18 +69,21 @@ export default function CategoryPage() {
     setZoom(1);
     setOffset({ x: 0, y: 0 });
     setModalOpen(false);
+    setImageLoading(false);
   };
 
   // Next/Prev image
   const nextImage = () => {
     setZoom(1);
     setOffset({ x: 0, y: 0 });
+    setImageLoading(true);
     setCurrentIndex((prev) => (prev + 1) % items.length);
   };
 
   const prevImage = () => {
     setZoom(1);
     setOffset({ x: 0, y: 0 });
+    setImageLoading(true);
     setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
   };
 
@@ -85,7 +91,7 @@ export default function CategoryPage() {
   const zoomIn = () => setZoom((prev) => Math.min(prev + 0.25, 3));
   const zoomOut = () => setZoom((prev) => {
     const newZoom = Math.max(prev - 0.25, 1);
-    if (newZoom === 1) setOffset({ x: 0, y: 0 }); // reset pan when zooming back to original
+    if (newZoom === 1) setOffset({ x: 0, y: 0 });
     return newZoom;
   });
 
@@ -144,14 +150,13 @@ export default function CategoryPage() {
 
       <div className="Tope">
         <GradientText
-  colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
-  animationSpeed={3}
-  showBorder={false}
-  className="Tope"
->
-  {`${category} Tissue`}
-</GradientText>
-
+          colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+          animationSpeed={3}
+          showBorder={false}
+          className="Tope"
+        >
+          {`${category} Tissue`}
+        </GradientText>
       </div>
 
       <div className={styles.masonryWrapper}>
@@ -179,6 +184,13 @@ export default function CategoryPage() {
           <button className={`${styles.arrowBtn} ${styles.arrowRight}`} onClick={(e) => { e.stopPropagation(); nextImage(); }}>›</button>
 
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            {/* Spinner overlay */}
+            {imageLoading && (
+              <div className={styles.spinnerOverlay}>
+                <div className={styles.spinner}></div>
+              </div>
+            )}
+
             <div
               ref={imageWrapperRef}
               className={styles.imageWrapper}
@@ -199,6 +211,7 @@ export default function CategoryPage() {
                 alt={items[currentIndex].title}
                 width={items[currentIndex].width}
                 height={items[currentIndex].height}
+                onLoad={() => setImageLoading(false)} // hide spinner once loaded
                 style={{
                   transform: `scale(${zoom}) translate(${offset.x / zoom}px, ${offset.y / zoom}px)`,
                   transformOrigin: "center",

@@ -1,21 +1,21 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import GlassSurface from "./GlassSurface";
 import "./Sidebar.css";
 
-// Import icons
+// Icons
 import { FaHome } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
-
-// ✅ Next.js router
 import Link from "next/link";
 
+// ✅ Full navItems array
 const navItems = [
   {
     label: "Home",
     icon: <FaHome />,
-    path: "/", // direct route
-    subLinks: null, // <- no dropdown
+    path: "/",
+    subLinks: null,
   },
   {
     label: "EPITHELIAL TISSUE",
@@ -83,7 +83,6 @@ const navItems = [
       { label: "CEREBELLUM", path: "/account/profile" },
       { label: "SPINAL CORD", path: "/account/settings" },
       { label: "PERIPHERAL NERVE", path: "/account/profile" },
-      
     ],
   },
   {
@@ -98,10 +97,7 @@ const navItems = [
   },
   {
     label: "EAR",
-    subLinks: [
-      { label: "INTERNAL EAR", path: "/account/profile" },
-    
-    ],
+    subLinks: [{ label: "INTERNAL EAR", path: "/account/profile" }],
   },
   {
     label: "EYE",
@@ -123,7 +119,6 @@ const navItems = [
       { label: "THYROID", path: "/endocrine" },
       { label: "PARATHROID", path: "/endocrine" },
       { label: "ADRENAL", path: "/endocrine" },
-      
     ],
   },
   {
@@ -160,7 +155,7 @@ const navItems = [
     label: "CARDIOVASCULAR SYSTEM",
     subLinks: [
       { label: "BLOOD VESSEL", path: "/cardio" },
-      { label: "  HEART", path: "/cardio" },
+      { label: "HEART", path: "/cardio" },
     ],
   },
   {
@@ -189,11 +184,22 @@ const navItems = [
       { label: "FEMALE", path: "/reproductive" },
     ],
   },
-]; // Your navItems here (omitted for brevity)...
-// Your navItems here (omitted for brevity)...
+];
 
 export default function Sidebar({ open, setOpen }) {
   const [openDropdown, setOpenDropdown] = useState(null);
+
+  // ✅ Prevent body scroll when sidebar is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [open]);
 
   const handleDropdownToggle = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
@@ -203,7 +209,6 @@ export default function Sidebar({ open, setOpen }) {
 
   return (
     <>
-      {/* Full-page blur overlay */}
       {open && (
         <div
           className="sidebar-overlay"
@@ -253,7 +258,11 @@ export default function Sidebar({ open, setOpen }) {
                     </div>
                   </>
                 ) : (
-                  <Link href={item.path} className="nav-link direct-link" onClick={() => setOpen(false)}>
+                  <Link
+                    href={item.path}
+                    className="nav-link direct-link"
+                    onClick={() => setOpen(false)}
+                  >
                     <div className="nav-link-content">
                       <span className="nav-icon">{item.icon}</span>
                       <span className="nav-label">{item.label}</span>
