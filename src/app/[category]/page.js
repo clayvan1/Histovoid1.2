@@ -8,6 +8,7 @@ import styles from "./FeaturedMasonry.module.css";
 import GradientText from "../components/GradientText";
 import { IMAGE_DATA } from "../../../data.js";
 import Footers from "../components/Footers";
+
 const Navbar = dynamic(() => import("../components/Nav"), { ssr: false, loading: () => null });
 const Masonry = dynamic(() => import("../components/Masonry"), { ssr: false, loading: () => <p>Loading gallery...</p> });
 const LoadingOverlay = dynamic(() => import("../components/LoadingOverlay"), { ssr: false });
@@ -22,17 +23,25 @@ export default function CategoryPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [loading, setLoading] = useState(true);
-
-  // Spinner for modal image
   const [imageLoading, setImageLoading] = useState(false);
-
-  // Drag-to-pan state
   const [dragging, setDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  const [genderFilter, setGenderFilter] = useState("all");
+
   const imageWrapperRef = useRef(null);
 
-  const items = IMAGE_DATA.filter((img) => img.category.toLowerCase() === category.toLowerCase());
+  // ✅ Items for this category
+  const items = IMAGE_DATA.filter(
+    (img) => img.category.toLowerCase() === category.toLowerCase()
+  );
+
+  // ✅ Check if this category has male/female distinction
+  const hasGender = items.some((img) => img.gender);
+
+  // ✅ Apply gender filter
+  const filteredItems =
+    genderFilter === "all" ? items : items.filter((img) => img.gender === genderFilter);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 600);
@@ -40,112 +49,53 @@ export default function CategoryPage() {
   }, []);
 
   useEffect(() => {
-    if (imgId && items.length > 0) {
-      const index = items.findIndex((img) => img.id.toString() === imgId);
+    if (imgId && filteredItems.length > 0) {
+      const index = filteredItems.findIndex((img) => img.id.toString() === imgId);
       if (index !== -1) {
         setCurrentIndex(index);
         setModalOpen(true);
         router.replace(`/${category}`, { scroll: false });
       }
     }
-  }, [imgId, items, category, router]);
+  }, [imgId, filteredItems, category, router]);
 
   useEffect(() => {
     document.body.style.overflow = modalOpen || loading ? "hidden" : "auto";
     return () => { document.body.style.overflow = "auto"; };
   }, [modalOpen, loading]);
 
-  // Open modal
-  const openModal = (index) => {
-    setCurrentIndex(index);
-    setZoom(1);
-    setOffset({ x: 0, y: 0 });
-    setImageLoading(true); // start spinner
-    setModalOpen(true);
-  };
-
-  // Close modal
-  const closeModal = () => {
-    setZoom(1);
-    setOffset({ x: 0, y: 0 });
-    setModalOpen(false);
-    setImageLoading(false);
-  };
-
-  // Next/Prev image
-  const nextImage = () => {
-    setZoom(1);
-    setOffset({ x: 0, y: 0 });
-    setImageLoading(true);
-    setCurrentIndex((prev) => (prev + 1) % items.length);
-  };
-
-  const prevImage = () => {
-    setZoom(1);
-    setOffset({ x: 0, y: 0 });
-    setImageLoading(true);
-    setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
-  };
-
-  // Zoom handlers
+  // --- Modal helpers (same as before) ---
+  const openModal = (index) => { setCurrentIndex(index); setZoom(1); setOffset({ x: 0, y: 0 }); setImageLoading(true); setModalOpen(true); };
+  const closeModal = () => { setZoom(1); setOffset({ x: 0, y: 0 }); setModalOpen(false); setImageLoading(false); };
+  const nextImage = () => { setZoom(1); setOffset({ x: 0, y: 0 }); setImageLoading(true); setCurrentIndex((prev) => (prev + 1) % filteredItems.length); };
+  const prevImage = () => { setZoom(1); setOffset({ x: 0, y: 0 }); setImageLoading(true); setCurrentIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length); };
   const zoomIn = () => setZoom((prev) => Math.min(prev + 0.25, 3));
-  const zoomOut = () => setZoom((prev) => {
-    const newZoom = Math.max(prev - 0.25, 1);
-    if (newZoom === 1) setOffset({ x: 0, y: 0 });
-    return newZoom;
-  });
+  const zoomOut = () => setZoom((prev) => { const newZoom = Math.max(prev - 0.25, 1); if (newZoom === 1) setOffset({ x: 0, y: 0 }); return newZoom; });
 
-  // Clamp offset so image stays in bounds
   const clampOffset = (x, y) => {
     const wrapper = imageWrapperRef.current;
     if (!wrapper) return { x, y };
-
-    const img = items[currentIndex];
+    const img = filteredItems[currentIndex];
     const wrapperWidth = wrapper.clientWidth;
     const wrapperHeight = wrapper.clientHeight;
     const imgWidth = img.width * zoom;
     const imgHeight = img.height * zoom;
-
     const maxX = Math.max((imgWidth - wrapperWidth) / 2, 0);
     const maxY = Math.max((imgHeight - wrapperHeight) / 2, 0);
-
-    return {
-      x: Math.min(Math.max(x, -maxX), maxX),
-      y: Math.min(Math.max(y, -maxY), maxY),
-    };
+    return { x: Math.min(Math.max(x, -maxX), maxX), y: Math.min(Math.max(y, -maxY), maxY) };
   };
 
-  // Drag handlers
-  const onMouseDown = (e) => {
-    if (zoom <= 1) return;
-    setDragging(true);
-    setStartPos({ x: e.clientX - offset.x, y: e.clientY - offset.y });
-  };
-  const onMouseMove = (e) => {
-    if (!dragging) return;
-    setOffset(clampOffset(e.clientX - startPos.x, e.clientY - startPos.y));
-  };
+  const onMouseDown = (e) => { if (zoom > 1) { setDragging(true); setStartPos({ x: e.clientX - offset.x, y: e.clientY - offset.y }); } };
+  const onMouseMove = (e) => { if (dragging) setOffset(clampOffset(e.clientX - startPos.x, e.clientY - startPos.y)); };
   const onMouseUp = () => setDragging(false);
   const onMouseLeave = () => setDragging(false);
-
-  // Touch handlers
-  const onTouchStart = (e) => {
-    if (zoom <= 1) return;
-    const touch = e.touches[0];
-    setDragging(true);
-    setStartPos({ x: touch.clientX - offset.x, y: touch.clientY - offset.y });
-  };
-  const onTouchMove = (e) => {
-    if (!dragging) return;
-    const touch = e.touches[0];
-    setOffset(clampOffset(touch.clientX - startPos.x, touch.clientY - startPos.y));
-  };
+  const onTouchStart = (e) => { if (zoom > 1) { const touch = e.touches[0]; setDragging(true); setStartPos({ x: touch.clientX - offset.x, y: touch.clientY - offset.y }); } };
+  const onTouchMove = (e) => { if (dragging) { const touch = e.touches[0]; setOffset(clampOffset(touch.clientX - startPos.x, touch.clientY - startPos.y)); } };
   const onTouchEnd = () => setDragging(false);
 
   return (
     <div className={styles.homeContainer}>
       <LoadingOverlay isLoading={loading} />
-
       <Navbar />
 
       <div className="Tope">
@@ -159,9 +109,33 @@ export default function CategoryPage() {
         </GradientText>
       </div>
 
+      {/* ✅ Show filter buttons only if male/female exist */}
+      {hasGender && (
+        <div className={styles.filterButtons}>
+          <button
+            className={genderFilter === "male" ? styles.activeBtn : ""}
+            onClick={() => setGenderFilter("male")}
+          >
+            Male
+          </button>
+          <button
+            className={genderFilter === "female" ? styles.activeBtn : ""}
+            onClick={() => setGenderFilter("female")}
+          >
+            Female
+          </button>
+          <button
+            className={genderFilter === "all" ? styles.activeBtn : ""}
+            onClick={() => setGenderFilter("all")}
+          >
+            All
+          </button>
+        </div>
+      )}
+
       <div className={styles.masonryWrapper}>
         <Masonry
-          items={items.map((item, index) => ({
+          items={filteredItems.map((item, index) => ({
             ...item,
             onClick: () => openModal(index),
           }))}
@@ -176,28 +150,20 @@ export default function CategoryPage() {
         />
       </div>
 
-      {modalOpen && items.length > 0 && (
+      {/* Modal remains same but now uses filteredItems */}
+      {modalOpen && filteredItems.length > 0 && (
         <div className={styles.modalOverlay} onClick={closeModal}>
-          <div className={styles.modalTitle}>{items[currentIndex].title}</div>
+          <div className={styles.modalTitle}>{filteredItems[currentIndex].title}</div>
           <button className={styles.closeBtn} onClick={closeModal}>✕</button>
           <button className={`${styles.arrowBtn} ${styles.arrowLeft}`} onClick={(e) => { e.stopPropagation(); prevImage(); }}>‹</button>
           <button className={`${styles.arrowBtn} ${styles.arrowRight}`} onClick={(e) => { e.stopPropagation(); nextImage(); }}>›</button>
 
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            {/* Spinner overlay */}
-            {imageLoading && (
-              <div className={styles.spinnerOverlay}>
-                <div className={styles.spinner}></div>
-              </div>
-            )}
-
+            {imageLoading && (<div className={styles.spinnerOverlay}><div className={styles.spinner}></div></div>)}
             <div
               ref={imageWrapperRef}
               className={styles.imageWrapper}
-              style={{
-                overflow: "hidden",
-                cursor: zoom > 1 ? (dragging ? "grabbing" : "grab") : "default",
-              }}
+              style={{ overflow: "hidden", cursor: zoom > 1 ? (dragging ? "grabbing" : "grab") : "default" }}
               onMouseDown={onMouseDown}
               onMouseMove={onMouseMove}
               onMouseUp={onMouseUp}
@@ -207,11 +173,11 @@ export default function CategoryPage() {
               onTouchEnd={onTouchEnd}
             >
               <Image
-                src={items[currentIndex].img}
-                alt={items[currentIndex].title}
-                width={items[currentIndex].width}
-                height={items[currentIndex].height}
-                onLoad={() => setImageLoading(false)} // hide spinner once loaded
+                src={filteredItems[currentIndex].img}
+                alt={filteredItems[currentIndex].title}
+                width={filteredItems[currentIndex].width}
+                height={filteredItems[currentIndex].height}
+                onLoad={() => setImageLoading(false)}
                 style={{
                   transform: `scale(${zoom}) translate(${offset.x / zoom}px, ${offset.y / zoom}px)`,
                   transformOrigin: "center",
@@ -220,7 +186,6 @@ export default function CategoryPage() {
                 className={styles.modalImage}
               />
             </div>
-
             <div className={styles.zoomControls}>
               <button onClick={zoomIn}>＋</button>
               <button onClick={zoomOut}>－</button>
@@ -228,6 +193,7 @@ export default function CategoryPage() {
           </div>
         </div>
       )}
+
       <Footers />
     </div>
   );

@@ -73,15 +73,14 @@ export const IMAGE_DATA = [
   { id: "47", img: "/Nervoussytem/cerebellum.jpg", width: 520, height: 660, title: "Cerebellum", category: "nervoussystem" },
 
   // ⚧ Reproductive
-  { id: "48", img: "/reproductive/0vary 5.jpg", width: 460, height: 580, title: "Ovary", category: "reproductive" },
-  { id: "49", img: "/reproductive/uterus 2.jpg", width: 500, height: 650, title: "Uterus", category: "reproductive" },
-  { id: "50", img: "/reproductive/seminiferous tubules.jpg", width: 480, height: 600, title: "Seminiferous Tubules", category: "reproductive" },
-  { id: "51", img: "/reproductive/fallopian tube.jpg", width: 530, height: 670, title: "Fallopian Tube", category: "reproductive" },
-  { id: "52", img: "/reproductive/epididyms2.jpg", width: 470, height: 620, title: "Epididymis", category: "reproductive" },
-  { id: "53", img: "/reproductive/ductusdeference.jpg", width: 510, height: 660, title: "Ductus Deferens", category: "reproductive" },
-  { id: "54", img: "/reproductive/Vagina.jpg", width: 490, height: 640, title: "Vagina", category: "reproductive" },
-  { id: "55", img: "/reproductive/CS.jpg", width: 480, height: 620, title: "Corpus Spongiosum (Penis)", category: "reproductive" },
-
+{ id: "48", img: "/reproductive/0vary 5.jpg", width: 460, height: 580, title: "Ovary", category: "reproductive", gender: "female" },
+  { id: "49", img: "/reproductive/uterus 2.jpg", width: 500, height: 650, title: "Uterus", category: "reproductive", gender: "female" },
+  { id: "50", img: "/reproductive/seminiferous tubules.jpg", width: 480, height: 600, title: "Seminiferous Tubules", category: "reproductive", gender: "male" },
+  { id: "51", img: "/reproductive/fallopian tube.jpg", width: 530, height: 670, title: "Fallopian Tube", category: "reproductive", gender: "female" },
+  { id: "52", img: "/reproductive/epididyms2.jpg", width: 470, height: 620, title: "Epididymis", category: "reproductive", gender: "male" },
+  { id: "53", img: "/reproductive/ductusdeference.jpg", width: 510, height: 660, title: "Ductus Deferens", category: "reproductive", gender: "male" },
+  { id: "54", img: "/reproductive/Vagina.jpg", width: 490, height: 640, title: "Vagina", category: "reproductive", gender: "female" },
+  { id: "55", img: "/reproductive/CS.jpg", width: 480, height: 620, title: "Corpus Spongiosum (Penis)", category: "reproductive", gender: "male" },
   // 🌬 Respiratory
   { id: "56", img: "/respiratory/Trachea.jpg", width: 500, height: 650, title: "Trachea", category: "respiratory" },
   { id: "57", img: "/respiratory/LUNG 1.jpg", width: 520, height: 670, title: "Lung", category: "respiratory" },
