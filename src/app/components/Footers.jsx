@@ -1,6 +1,6 @@
 "use client";
 import "./Footer.css";
-import TextType from "./TextType"; // ✅ import your typing component
+import TextType from "./TextType"; 
 
 export default function Footer() {
   return (
