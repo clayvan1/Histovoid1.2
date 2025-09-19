@@ -10,11 +10,9 @@ import GradientText from "./components/GradientText";
 import Link from "next/link";
 import { FiSearch } from "react-icons/fi";
 import SearchModal from "./components/SearchModal";
-import LoadingOverlay from "./components/LoadingOverlay"; // ✅ overlay
+import LoadingOverlay from "./components/LoadingOverlay"; 
 import "./globals.css";
-
-
-import Footer from "./components/Footer"; // ✅ footer
+import Footer from "./components/Footer"; 
 
 export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -22,14 +20,22 @@ export default function Home() {
 
   // Hide overlay after initial page load
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 800); // adjust duration if needed
+    const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
-  // Block scroll only while loading overlay is active
+  // 🚫 Prevent scrolling while loading
   useEffect(() => {
-    document.body.style.overflow = loading ? "hidden" : "auto";
-    return () => { document.body.style.overflow = "auto"; };
+    if (loading) {
+      document.body.style.overflow = "hidden"; // disable scroll
+    } else {
+      document.body.style.overflow = ""; // restore default scroll
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [loading]);
 
   const openSearch = () => setIsSearchOpen(true);
@@ -151,7 +157,9 @@ export default function Home() {
 
       {/* Search Modal */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-        <Footer/>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
