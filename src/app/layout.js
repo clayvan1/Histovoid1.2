@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";  // ✅ correct import
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -13,13 +14,13 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: {
-    default: "Histovoid  ",            // Default title
-    template: "%s | Histovoid",        // Dynamic per-page titles
+    default: "Histovoid",
+    template: "%s | Histovoid",
   },
   description: "Explore microscopic tissue histology slides.",
   icons: {
-    icon: "/abstract.png",      // ✅ favicon from /public
-    apple: "/abstract.png",     // ✅ for iOS/Apple
+    icon: "/abstract.png",
+    apple: "/abstract.png",
   },
 };
 
@@ -30,6 +31,8 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        {/* ✅ Add Analytics at the bottom of <body> */}
+        <Analytics />
       </body>
     </html>
   );
