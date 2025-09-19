@@ -53,18 +53,18 @@ const navItems = [
   {
     label: "NERVOUS TISSUE",
     subLinks: [
-      { label: "PYRAMIDAL", path: "/nervoustissue" },
-      { label: "STELLATE", path: "/nervoustissue" },
-      { label: "PURKINJE", path: "/nervoustissue" },
-      { label: "DORSAL ROOT GANGLION", path: "/nervoustissue" },
+      { label: "PYRAMIDAL", path: "/nervous" },
+      { label: "STELLATE", path: "/nervous" },
+      { label: "PURKINJE", path: "/nervous" },
+      { label: "DORSAL ROOT GANGLION", path: "/nervous" },
     ],
   },
   {
     label: "PROPULSION TISSUE",
     subLinks: [
-      { label: "SKELETAL", path: "/muscles" },
-      { label: "CARDIAC", path: "/muscles" },
-      { label: "SMOOTH", path: "/muscles" },
+      { label: "SKELETAL", path: "/propulsion" },
+      { label: "CARDIAC", path: "/propulsion" },
+      { label: "SMOOTH", path: "/propulsion" },
     ],
   },
   {
@@ -78,11 +78,11 @@ const navItems = [
   {
     label: "NERVOUS SYSTEM",
     subLinks: [
-      { label: "CEREBRAL CORTEX", path: "/account/profile" },
-      { label: "BRAIN STEM", path: "/account/settings" },
-      { label: "CEREBELLUM", path: "/account/profile" },
-      { label: "SPINAL CORD", path: "/account/settings" },
-      { label: "PERIPHERAL NERVE", path: "/account/profile" },
+      { label: "CEREBRAL CORTEX", path: "/nervoussystem" },
+      { label: "BRAIN STEM", path: "/nervoussystem" },
+      { label: "CEREBELLUM", path: "/nervoussystem" },
+      { label: "SPINAL CORD", path: "/nervoussystem" },
+      { label: "PERIPHERAL NERVE", path: "/nervoussystem" },
     ],
   },
   {
@@ -97,7 +97,7 @@ const navItems = [
   },
   {
     label: "EAR",
-    subLinks: [{ label: "INTERNAL EAR", path: "/account/profile" }],
+    subLinks: [{ label: "INTERNAL EAR", path: "/ear" }],
   },
   {
     label: "EYE",

@@ -7,6 +7,7 @@ import Sidebar from "./side";
 import SearchModal from "./SearchModal";
 import "./Navbar.css";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image"; // ✅ import Image
 
 export default function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -16,13 +17,10 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Handle full-page loading spinner
   useEffect(() => {
     const handleStart = () => setLoading(true);
     const handleComplete = () => setLoading(false);
 
-    // next/navigation doesn't have events like next/router, 
-    // so we simulate spinner with route changes
     const unlisten = router.events?.on?.("routeChangeStart", handleStart);
     const unlistenComplete = router.events?.on?.("routeChangeComplete", handleComplete);
 
@@ -49,8 +47,17 @@ export default function Navbar() {
           {sidebarOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
 
-        {/* Centered App title */}
-        <h1 className="navbar-title">HISTOVOID</h1>
+        {/* Centered App title with logo */}
+        <div className="navbar-title-wrapper">
+          <Image
+            src="/abstract.png" // ✅ path to your logo (place it in public/)
+            alt="Histovoid Logo"
+            width={28}
+            height={28}
+            className="navbar-logo"
+          />
+          <h1 className="navbar-title">HISTOVOID</h1>
+        </div>
 
         {/* Search icon - right */}
         <button

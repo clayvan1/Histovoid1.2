@@ -3,109 +3,218 @@ import { useEffect, useMemo, useRef, useCallback } from 'react';
 import { useGesture } from '@use-gesture/react';
 import './DomeGallery.css';
 
-const DEFAULT_IMAGES = [
+export const DEFAULT_IMAGES = [
+  // Cardio 🫀
   {
-    src: "/Cardio/auricle.jpg",
-    alt: 'Auricle'
+    src: "/Cardio/Elastic-artery.jpg",
+    alt: "Elastic Artery",
   },
   {
-    src: '/bone/compact bone 2.jpg',
-    alt: 'compact bone'
+    src: "/Cardio/mascular-artery.jpg",
+    alt: "Muscular Artery",
+  },
+  // Bone 🦴
+  {
+    src: "/bone/compactbone2.jpg",
+    alt: "Compact Bone",
   },
   {
-    src: '/bone/spongy bone.jpg',
-    alt: 'spongy bone'
+    src: "/bone/spongy bone.jpg",
+    alt: "Spongy Bone",
+  },
+  // Cartilage  cartilage
+  {
+    src: "/cartilage/articular2.jpg",
+    alt: "Articular Cartilage",
   },
   {
-    src: '/Cardio/Elastic artery.jpg',
-    alt: 'Elastic artery'
+    src: "/cartilage/elastic.jpg",
+    alt: "Elastic Cartilage",
   },
   {
-    src: '/Cardio/mascular artery.jpg',
-    alt: 'mascular artery'
+    src: "/cartilage/fibrocrtilage.jpg",
+    alt: "Fibrocartilage",
   },
   {
-    src: '/cartilage/articular 2.jpg',
-    alt: 'articular cartilage'
+    src: "/cartilage/epiphseal plate.jpg",
+    alt: "Epiphyseal Plate",
   },
-  { src: '/cartilage/elastic.jpg', alt: 'elastic' },
-  { src: '/cartilage/fibrocrtilage.jpg', alt: 'fibro cartilage' },
-  { src: '/cartilage/epiphseal plate.jpg', alt: 'epiphyseal' },
-  { src: '/connective/mocous 4.jpg', alt: 'Mucous connective' },
-  { src: '/connective/elastic fiber.jpg', alt: 'elastic' },
-  { src: '/connective/Reticular.jpg', alt: 'Reticular' },
-  { src: '/connective/dense connective.jpg', alt: 'Dense connective tissue' },
-  { src: '/eye/CORNEA.jpg', alt: 'cornea' },
-  { src: '/eye/eye lid.jpg', alt: 'EYE LID' },
-  { src: '/eye/SCLERA 2.jpg', alt: 'SCLERA' },
-  { src: '/Git/duodenum new.jpg', alt: 'Brunners' },
-  { src: '/Git/esophagus.jpg', alt: 'esophagus' },
-  { src: '/Git/gastric e junction.jpg', alt: 'gastric esophageal junction' },
-  { src: '/Git/jejunum new.jpg', alt: 'jejunum ' },
-  { src: '/Git/large intestine 1.jpg', alt: 'Large intestine' },
-  { src: 'Git/lip 3.jpg', alt: 'Lip ' },
-  { src: 'Git/stoamcheee.jpg', alt: 'stomach ' },
-  { src: 'Git glands/liver.jpg', alt: 'Liver' },
-  { src: 'Git glands/gall bladder.jpg', alt: 'gall bladder' },
-  { src: 'Git glands/PAROTID.jpg', alt: 'Parotid' },
-  { src: 'Git glands/submandibular 2.jpg', alt: 'Submandibular' },
-  { src: 'Git glands/pancrease.jpg', alt: 'pancrease' },
-  { src: 'Git glands/sublingual salivary.jpg', alt: 'Sublingual' },
-  { src: 'immune/lymphoid.jpg', alt: 'Lymphoid' },
-  { src: 'immune/palatine tonsiles 2.jpg', alt: 'Palatine Tonsils' },
-  { src: 'immune/spleen 1.jpg', alt: 'spleen' },
-  { src: 'immune/appendix.jpg', alt: 'appendix' },
-  { src: 'immune/thymus.jpg', alt: 'Thymus' },
-  { src: 'muscles/cardiac.jpg', alt: 'Cardiac' },
-  { src: 'muscles/skeletal 4.jpg', alt: 'Skeletal ' },
-  { src: 'nervous tissue/DRG.jpg', alt: 'DRG' },
-  { src: 'nervous tissue/purkinje neurons.jpg', alt: 'Purkinje Neurons' },
-  { src: 'nervous tissue/pyramidal neurons.jpg', alt: 'Pyramidal Neurons' },
-  { src: 'nervous tissue/FIBROUS.jpg', alt: 'Fibrous ASTROCYTES' },
-  { src: 'Nervoussytem/cerebral cortex.jpg', alt: 'Cerebral cortex' },
-  { src: 'Nervoussytem/cervical spinal.jpg', alt: 'Cervical spinal' },
-  { src: 'Nervoussytem/lumbar.jpg', alt: 'Lumbar' },
-  { src: 'Nervoussytem/siatic nerve.jpg', alt: 'siatic' },
-  { src: 'Nervoussytem/cerebellum.jpg', alt: 'Cerebellum' },
-  { src: 'reproductive/0vary 5.jpg', alt: 'Ovary' },
-  { src: 'reproductive/uterus 2.jpg', alt: 'uterus' },
-  { src: 'reproductive/seminiferous tubules.jpg', alt: 'seminiferous tubules' },
-  { src: 'reproductive/fallopian tube.jpg', alt: 'fallopian tube' },
-  { src: 'reproductive/epididyms2.jpg', alt: 'epididyms' },
-  { src: 'reproductive/ductusdeference.jpg', alt: 'ductusdeference' },
-  { src: 'reproductive/Vagina.jpg', alt: 'Vagina' },
-  { src: 'respiratory/Trachea.jpg', alt: 'Trachea' },
-  { src: 'respiratory/LUNG 1.jpg', alt: 'LUNG ' },
-  { src: 'respiratory/larynx.jpg', alt: 'LARYNX' },
-  { src: 'respiratory/BROCHIOLES.jpg', alt: 'LUNG ' },
-  { src: 'respiratory/nasal cavity 2.jpg', alt: 'LUNG ' },
-  { src: 'skin/SKIN.jpg', alt: 'skin' },
-  { src: 'skin/pilosabaceous unt.jpg', alt: 'pilosabaceous' },
-  { src: 'skin/nail.jpg', alt: 'nail' },
-  { src: 'skin/mamary.jpg', alt: 'mammary' },
-  { src: 'urinary/kidney.jpg', alt: 'Kidney' },
-  { src: 'urinary/GLOMERULUS.jpg', alt: 'glomerulus' },
-  { src: 'urinary/ureter.jpg', alt: 'ureter' },
-  { src: 'reproductive/CS.jpg', alt: 'PENIS' },
-  { src: 'receptors/circumllate 5.jpg', alt: 'Circumvallate' },
-  { src: 'receptors/filiform.jpg', alt: 'Filliform' },
-  { src: 'receptors/Golgi tendon.jpg', alt: 'Golgitendon' },
-  { src: 'receptors/ORgan of corti.jpg', alt: 'Organ of Corti' },
-  { src: 'receptors/Retina 3.jpg', alt: 'Retina' },
-  { src: 'receptors/foliate papilla.jpg', alt: 'Foliate' },
-  { src: 'endocrine/pituitary.jpg', alt: 'Pituitary' },
-  { src: 'endocrine/THYROID.jpg', alt: 'Thyroid' },
-  { src: 'endocrine/suparrenal.jpg', alt: 'Suprarenal' },
+  // Connective Tissue 🔗
+  {
+    src: "/connective/dense connective.jpg",
+    alt: "Dense Connective Tissue",
+  },
+  {
+    src: "/connective/Reticular.jpg",
+    alt: "Reticular Tissue",
+  },
+  // Eye 👁️
+  {
+    src: "/eye/CORNEA.jpg",
+    alt: "Cornea",
+  },
+  {
+    src: "/eye/eye-lid.jpg",
+    alt: "Eyelid",
+  },
+  {
+    src: "/eye/SCLERA 2.jpg",
+    alt: "Sclera",
+  },
+  // GIT  tract
+  {
+    src: "/git/duodenum-histology.jpg",
+    alt: "Duodenum with Brunner's glands",
+  },
+  {
+    src: "/git/esophagus-histology.jpg",
+    alt: "Esophagus",
+  },
+  {
+    src: "/git/gastro-esophageal-junction.jpg",
+    alt: "Gastro-Esophageal Junction",
+  },
+  {
+    src: "/git/jejunum-histology.jpg",
+    alt: "Jejunum",
+  },
+  {
+    src: "/git/large-intestine-histology2.jpg",
+    alt: "Large Intestine",
+  },
+  {
+    src: "/git/lip-histology.jpg",
+    alt: "Lip",
+  },
+  {
+    src: "/git/stomach-histology.jpg",
+    alt: "Stomach",
+  },
+  // GIT Glands 🍇
+  {
+    src: "/git-glands/liver-histology.jpg",
+    alt: "Liver",
+  },
+  {
+    src: "/git-glands/gall-bladder-histology.jpg",
+    alt: "Gall Bladder",
+  },
+  {
+    src: "/git-glands/parotid-gland-histology.jpg",
+    alt: "Parotid Gland",
+  },
+  {
+    src: "/git-glands/submandibular-gland-histology.jpg",
+    alt: "Submandibular Gland",
+  },
+  {
+    src: "/git-glands/pancreas-histology.jpg",
+    alt: "Pancreas",
+  },
+  {
+    src: "/git-glands/sublingual-gland-histology.jpg",
+    alt: "Sublingual Gland",
+  },
+  // Immune System 🛡️
+  {
+    src: "/immune/lymphoid-tissue-histology.jpg",
+    alt: "Lymphoid Tissue",
+  },
+  {
+    src: "/immune/palatine-tonsils-histology.jpg",
+    alt: "Palatine Tonsils",
+  },
+  {
+    src: "/immune/spleen-histology.jpg",
+    alt: "Spleen",
+  },
+  {
+    src: "/immune/appendix-histology.jpg",
+    alt: "Appendix",
+  },
+  {
+    src: "/immune/thymus-histology.jpg",
+    alt: "Thymus",
+  },
+  // Muscles 💪
+  {
+    src: "/muscles/cardiac-muscle-histology.jpg",
+    alt: "Cardiac Muscle",
+  },
+  {
+    src: "/muscles/skeletal-muscle-histology.jpg",
+    alt: "Skeletal Muscle",
+  },
+  {
+    src: "/muscles/smooth-muscle-histology.jpg",
+    alt: "Smooth Muscle",
+  },
 
-   
-
-
-
-
-
-
+  {
+    src: "/urinary/ureter-histology.jpg",
+    alt: "Ureter",
+  },
+  {
+    src: "/urinary/urethra-histology.jpg",
+    alt: "urethra",
+  },
+  {
+    src: "/urinary/glomerulus-histology.jpg",
+    alt: "glomerulus",
+  },
+  {
+    src: "/urinary/bladder-histology.jpg",
+    alt: "Bladder",
+  },
+  {
+    src: "/endocrine/islets.jpg",
+    alt: "Islets of Langerhans",
+  },
+  {
+    src: "/endocrine/parathyroid.jpg",
+    alt: "parathyroid",
+  },
+  {
+    src: "/urinary/bladder-histology.jpg",
+    alt: "Bladder",
+  },
+  {
+    src: "/nervous-tissue/purkinje-neurons-histology.jpg",
+    alt: "Purkinje Neurons",
+  },
+  {
+    src: "/nervous-tissue/pyramidal-neurons-histology.jpg",
+    alt: "Pyramidal Neurons",
+  },
+  {
+    src: "/nervous-tissue/fibrous-astrocytes-histology.jpg",
+    alt: "Fibrous Astrocytes",
+  },
+  {
+    src: "/nervous-system/cerebral-cortex3.jpg",
+    alt: "Cerebral Cortex",
+  },
+  {
+    src: "/reproductive/ovary-histology.jpg",
+    alt: "Bladder",
+  },
+  {
+    src: "/reproductive/uterus-histology.jpg",
+    alt: "uterus",
+  },
+  {
+    src: "/reproductive/seminiferous-tubules-histology.jpg",
+    alt: "Seminiferous Tubules",
+  },
+  {
+    src: "/reproductive/fallopian-tube-histology.jpg",
+    alt: "Fibrous Astrocytes",
+  },
+  {
+    src: "/reproductive/epididymis-histology.jpg",
+    alt: "Cerebral Cortex",
+  },
 ];
-
 const DEFAULTS = {
   maxVerticalRotationDeg: 5,
   dragSensitivity: 20,

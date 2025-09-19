@@ -88,3 +88,12 @@
   font-size: 1.5rem;
   pointer-events: none; /* prevent overlapping buttons */
 }
+.navbar-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* space between logo and text */
+}
+
+.navbar-logo {
+  border-radius: 6px; /* optional: make logo edges smooth */
+}

@@ -2,13 +2,14 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding:  20px;
+  padding-top:  20px;
    /* Dark footer */
   color: #ccc;
   font-family: Arial, sans-serif;
 width: 60vw;
-border-top: 0.3px solid white;
+border-top: 0.3px solid black;
 font-size: 1rem;
+
 }
 
 .footer-left {

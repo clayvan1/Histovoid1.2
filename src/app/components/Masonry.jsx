@@ -160,6 +160,13 @@ const Masonry = ({
 
   return (
     <div ref={containerRef} className="list">
+      {/* ✅ Spinner overlay */}
+      {!imagesReady && (
+        <div className="spinner-overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
+
       {gridItems.map((item) => (
         <div
           key={item.id}
