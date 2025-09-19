@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: {
-    default: "HistoVoid  ",            // Default title
-    template: "%s | HistoVoid",        // Dynamic per-page titles
+    default: "Histovoid  ",            // Default title
+    template: "%s | Histovoid",        // Dynamic per-page titles
   },
   description: "Explore microscopic tissue histology slides.",
   icons: {

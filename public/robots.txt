@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://histovoid.org/sitemap.xml
