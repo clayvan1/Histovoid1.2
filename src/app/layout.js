@@ -19,8 +19,8 @@ export const metadata = {
   },
   description: "Explore microscopic tissue histology slides.",
   icons: {
-    icon: "/abstract.png",
-    apple: "/abstract.png",
+    icon: "/supercoil.svg",
+    apple: "/supercoil.svg",
   },
 };
 

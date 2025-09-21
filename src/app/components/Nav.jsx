@@ -50,7 +50,7 @@ export default function Navbar() {
         {/* Centered App title with logo */}
         <div className="navbar-title-wrapper">
           <Image
-            src="/abstract.png" // ✅ path to your logo (place it in public/)
+            src="/supercoil.svg" // ✅ path to your logo (place it in public/)
             alt="Histovoid Logo"
             width={28}
             height={28}

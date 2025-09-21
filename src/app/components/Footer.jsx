@@ -19,12 +19,24 @@ export default function Footer() {
       </div>
 
       {/* Right side icons */}
-      <div className="footer-right">
-        <a href="#" aria-label="Facebook"><FaFacebook /></a>
-        <a href="#" aria-label="Twitter"><FaTwitter /></a>
-        <a href="#" aria-label="Instagram"><FaInstagram /></a>
-        <a href="#" aria-label="Github"><FaGithub /></a>
-      </div>
+      {/* Right side icons */}
+<div className="footer-right">
+  <a href="https://x.com/ClayvanOmondi" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
+    <FaTwitter />
+  </a>
+  <a href="https://www.instagram.com/clay_dev" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+    <FaInstagram />
+  </a>
+  <a
+    href="https://github.com/clayvan1"   // ✅ your GitHub link
+    aria-label="Github"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <FaGithub />
+  </a>
+</div>
+
     </footer>
   );
 }
