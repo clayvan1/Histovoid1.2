@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://histovoid.org"),
   title: {
     default: "Histovoid",
     template: "%s | Histovoid",
@@ -21,6 +22,9 @@ export const metadata = {
   icons: {
     icon: "/supercoil.svg",
     apple: "/supercoil.svg",
+  },
+  other: {
+    "p:domain_verify": "dc5f6aced1e4d69fcf3b3a60494d83ec", // ✅ Pinterest verification
   },
 };
 
