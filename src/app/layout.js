@@ -20,8 +20,8 @@ export const metadata = {
   },
   description: "Explore microscopic tissue histology slides.",
   icons: {
-    icon: "/supercoil.svg",
-    apple: "/supercoil.svg",
+    icon: "/supercoil.png",
+    apple: "/supercoil.png",
   },
   other: {
     "p:domain_verify": "dc5f6aced1e4d69fcf3b3a60494d83ec", // ✅ Pinterest verification
