@@ -58,7 +58,7 @@ export default function SearchModal({ isOpen, onClose }) {
           <FiSearch className={styles.searchIcon} />
           <input
             type="text"
-            placeholder="Search tissues or categories..."
+            placeholder="Search slides ..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className={styles.searchInput}
