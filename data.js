@@ -1075,7 +1075,7 @@ keywords: ["elastic artery histology", "large artery microscope", "vascular anat
     img: "/reproductive/ovary-histology.jpg", 
     width: 460, 
     height: 580, 
-    title: "Ovary vessels", 
+    title: "Ovary ", 
     category: "reproductive", 
     gender: "female" ,
     description: "Histology slide of the ovary showing follicles at various stages of development.",
@@ -1320,6 +1320,17 @@ keywords: ["elastic artery histology", "large artery microscope", "vascular anat
   description: "Histology slide of the larynx showing respiratory epithelium and cartilage.",
   alt: "Microscopic image of larynx with respiratory epithelium and cartilage",
   keywords: ["larynx histology", "respiratory epithelium", "cartilage", "histology"]
+},
+{ 
+  id: 250, 
+  img: "/respiratory/epiglottis-histology.jpg", 
+  width: 460, 
+  height: 600, 
+  title: "Epiglottis Histology", 
+  category: "respiratory", 
+  description: "Histology slide of the epiglottis showing respiratory epithelium and cartilage.",
+  alt: "Microscopic image of epiglottis with respiratory epithelium and cartilage",
+  keywords: ["epiglottis histology", "respiratory epithelium", "cartilage", "histology"]
 },
 { 
   id: 59, 
@@ -1788,7 +1799,15 @@ keywords: ["elastic artery histology", "large artery microscope", "vascular anat
   img: "/epithelium/simple-columnar-epithelium-histology.jpg", 
   width: 490, 
   height: 610, 
-  title: "Simple Columnar Epithelium Histology - Intestinal Lining", 
+  title: "Simple Columnar ", 
+  category: "epithelium" 
+},
+{ 
+  id: 251, 
+  img: "/epithelium/simple-columnar-epithelium-histology2.jpg", 
+  width: 390, 
+  height: 610, 
+  title: "Simple Columnar ", 
   category: "epithelium" 
 },
 { 
