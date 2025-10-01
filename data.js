@@ -588,7 +588,7 @@ keywords: ["elastic artery histology", "large artery microscope", "vascular anat
     img: "/git/lip-histology.jpg", 
     width: 420, 
     height: 540, 
-    title: "Lip parascutaneous", 
+    title: "Lip parscutaneous", 
     category: "git" ,
     description: "Histology slide of the lip showing the transition from oral mucosa to skin.",
     alt: "Microscopic image of lip tissue with oral mucosa and skin junction",

@@ -2,16 +2,15 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding-top:  20px;
-   /* Dark footer */
+  padding-top: 20px;
   color: #ccc;
   font-family: Arial, sans-serif;
-width: 60vw;
-border-top: 0.3px solid black;
-font-size: 1rem;
-
+  width: 60vw;
+  border-top: 0.3px solid black;
+  font-size: 1rem;
 }
 
+/* Left side content */
 .footer-left {
   display: flex;
   flex-direction: column;
@@ -19,6 +18,18 @@ font-size: 1rem;
   font-size: 1rem;
 }
 
+/* Logo + Histovoid text */
+.footer-logo-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-logo-text img {
+  display: block;
+}
+
+/* Right side icons */
 .footer-right {
   display: flex;
   gap: 15px;
@@ -35,16 +46,7 @@ font-size: 1rem;
   transform: scale(1.1);
 }
 
-.glow {
-  color: #40a9ff;
-  text-shadow: 0 0 8px #40a9ff, 0 0 12px #40a9ff;
-  font-weight: bold;
-}
-
-body::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
+/* Glow effects */
 .glow {
   color: #40a9ff;
   text-shadow: 0 0 8px #40a9ff, 0 0 12px #40a9ff;
@@ -55,12 +57,21 @@ body::-webkit-scrollbar {
   color: #40a9ff;
   text-shadow: 0 0 6px #40a9ff, 0 0 10px #40a9ff, 0 0 14px #40a9ff;
 }
+
+/* Remove scrollbar */
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Mobile view */
 @media (max-width: 768px) {
   .footer {
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: 20px; /* space between left and right sections */
+    width: 100%; /* make footer take full width on small screens */
   }
 
   .footer-left {
