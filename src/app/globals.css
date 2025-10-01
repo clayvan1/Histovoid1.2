@@ -369,7 +369,7 @@ body{
 
   .dome-wrapper {
     width: 100%;
-    height: 58vh;
+    height: auto;
     aspect-ratio: 1/ 1;
     border-radius: 20px;
   }
