@@ -2,21 +2,38 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // Fix for HMR WebSocket errors
+  
+  // Vercel specific optimizations
+  output: 'standalone',
+  images: {
+    unoptimized: true,
+    domains: [],
+  },
+  
+  // Disable HMR in production
   webpack: (config, { dev, isServer }) => {
-    // Fix for HMR ping errors
-    if (dev && !isServer) {
+    // Only in development, not in Vercel builds
+    if (!dev && !isServer) {
+      config.plugins = config.plugins.filter(
+        (plugin) => plugin.constructor.name !== 'HotModuleReplacementPlugin'
+      );
+    }
+    
+    // Suppress HMR warnings in production
+    if (!dev) {
+      config.stats = 'errors-only';
       config.infrastructureLogging = {
         level: 'error',
-        debug: false,
       };
     }
+    
     return config;
   },
-  // Disable HMR if issues persist (temporary fix)
-  onDemandEntries: {
-    maxInactiveAge: 25 * 1000,
-    pagesBufferLength: 2,
+  
+  // Vercel deployment settings
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
 };
 
