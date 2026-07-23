@@ -12,11 +12,13 @@ import { FiSearch } from "react-icons/fi";
 import SearchModal from "./components/SearchModal";
 import LoadingOverlay from "./components/LoadingOverlay"; 
 import "./globals.css";
-import Footer from "./components/Footer"; 
+import Footer from "./components/Footer";
+import RadarModal from "./components/RadarModal"; // Import Radar Modal
 
 export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isRadarModalOpen, setIsRadarModalOpen] = useState(true); // Modal state
 
   // Hide overlay after initial page load
   useEffect(() => {
@@ -44,6 +46,12 @@ export default function Home() {
     <div className="home-container">
       {/* Loading Overlay */}
       <LoadingOverlay isLoading={loading} />
+
+      {/* Radar Modal - appears on load with typing effect and confetti */}
+      <RadarModal 
+        isOpen={isRadarModalOpen} 
+        onClose={() => setIsRadarModalOpen(false)} 
+      />
 
       {/* Background LightRays */}
       <div className="light">
