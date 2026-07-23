@@ -131,121 +131,99 @@ const RadarModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="radar-modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="radar-modal-card" ref={containerRef}>
-        {/* Radar Background - Clear, no blur */}
-        <div className="radar-bg-container">
-          <Radar
-            speed={1}
-            scale={0.75}
-            ringCount={14}
-            spokeCount={16}
-            ringThickness={0.04}
-            spokeThickness={0.008}
-            sweepSpeed={0.6}
-            sweepWidth={2.5}
-            sweepLobes={1}
-            color="#00ff88"
-            backgroundColor="#0a0e1a"
-            falloff={2}
-            brightness={1.5}
-            enableMouseInteraction
-            mouseInfluence={0.15}
-          />
+    <div className="radar-modal-fullscreen" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      {/* Radar Background - Full screen */}
+      <div className="radar-full-bg">
+        <Radar
+          speed={0.8}
+          scale={0.9}
+          ringCount={14}
+          spokeCount={16}
+          ringThickness={0.04}
+          spokeThickness={0.008}
+          sweepSpeed={0.6}
+          sweepWidth={2.5}
+          sweepLobes={1}
+          color="#00ff88"
+          backgroundColor="#0a0e1a"
+          falloff={2}
+          brightness={1.8}
+          enableMouseInteraction
+          mouseInfluence={0.15}
+        />
+      </div>
+
+      {/* Overlay gradient for text readability */}
+      <div className="radar-full-overlay"></div>
+
+      {/* Confetti Container */}
+      {showConfetti && (
+        <div className="confetti-container">
+          {confettiPieces.map((piece) => (
+            <div
+              key={piece.id}
+              className="confetti-piece"
+              style={{
+                left: `${piece.x}%`,
+                top: `${piece.y}%`,
+                transform: `rotate(${piece.rotation}deg)`,
+                width: `${piece.size}px`,
+                height: `${piece.size * 0.6}px`,
+                backgroundColor: piece.color,
+                borderRadius: piece.size > 8 ? "2px" : "50%",
+              }}
+            />
+          ))}
         </div>
+      )}
 
-        {/* Light overlay for text readability - no blur */}
-        <div className="radar-overlay-gradient"></div>
-
-        {/* Confetti Container */}
-        {showConfetti && (
-          <div className="confetti-container">
-            {confettiPieces.map((piece) => (
-              <div
-                key={piece.id}
-                className="confetti-piece"
-                style={{
-                  left: `${piece.x}%`,
-                  top: `${piece.y}%`,
-                  transform: `rotate(${piece.rotation}deg)`,
-                  width: `${piece.size}px`,
-                  height: `${piece.size * 0.6}px`,
-                  backgroundColor: piece.color,
-                  borderRadius: piece.size > 8 ? "2px" : "50%",
-                }}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Linux Terminal Style CLI */}
-        <div className="terminal-container">
-          <div className="terminal-header">
-            <span className="terminal-dot"></span>
-            <span className="terminal-dot"></span>
-            <span className="terminal-dot"></span>
-            <span className="terminal-title">user@radar:~$</span>
-          </div>
-          <div className="terminal-body">
-            {typedLines.map((line, index) => (
-              <div key={index} className="terminal-line">
-                <span className="terminal-prompt">$</span>
-                <span className="terminal-text">{line}</span>
-                {index === typedLines.length - 1 && !allLinesComplete && (
-                  <span className="terminal-cursor">█</span>
-                )}
+      {/* Linux Terminal - Full width */}
+      <div className="terminal-fullscreen">
+        <div className="terminal-header-full">
+          <span className="terminal-dot"></span>
+          <span className="terminal-dot"></span>
+          <span className="terminal-dot"></span>
+          <span className="terminal-title">user@radar:~$</span>
+          <span className="terminal-close" onClick={onClose}>✕</span>
+        </div>
+        <div className="terminal-body-full">
+          {typedLines.map((line, index) => (
+            <div key={index} className="terminal-line-full">
+              <span className="terminal-prompt">$</span>
+              <span className="terminal-text">{line}</span>
+              {index === typedLines.length - 1 && !allLinesComplete && (
+                <span className="terminal-cursor">█</span>
+              )}
+            </div>
+          ))}
+          {allLinesComplete && (
+            <>
+              <div className="terminal-success">
+                <span className="terminal-prompt">✔</span>
+                <span className="terminal-text-success">✦ SYSTEM READY · 2026 WRAP COMPLETE ✦</span>
               </div>
-            ))}
-            {allLinesComplete && (
-              <>
-                <div className="terminal-success">
-                  <span className="terminal-prompt">✔</span>
-                  <span className="terminal-text-success">✦ SYSTEM READY · 2026 WRAP COMPLETE ✦</span>
-                </div>
-                <div className="terminal-celebration">
-                  🎉 SEASON WRAP 2026 🎉
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Close button */}
-        <div className="close-wrap">
-          <button className="close-btn" onClick={onClose}>
-            ✕ close · archive
-          </button>
+              <div className="terminal-celebration">
+                🎉 SEASON WRAP 2026 🎉
+              </div>
+            </>
+          )}
         </div>
       </div>
 
       <style>{`
-        .radar-modal-overlay {
+        .radar-modal-fullscreen {
           position: fixed;
           inset: 0;
-          background: rgba(2, 6, 18, 0.8);
+          background: rgba(2, 6, 18, 0.9);
           display: flex;
           align-items: center;
           justify-content: center;
           z-index: 1000;
-          padding: 1.5rem;
           animation: fadeIn 0.6s ease;
-        }
-
-        .radar-modal-card {
-          position: relative;
-          background: transparent;
-          border: 1px solid rgba(0, 255, 136, 0.15);
-          border-radius: 1.5rem;
-          padding: 2rem 2.5rem 2.5rem 2.5rem;
-          max-width: 820px;
-          width: 100%;
-          max-height: 90vh;
           overflow: hidden;
-          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 60px rgba(0, 255, 136, 0.05);
-          animation: modalFloat 0.8s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .radar-bg-container {
+        .radar-full-bg {
           position: absolute;
           top: 0;
           left: 0;
@@ -255,22 +233,20 @@ const RadarModal = ({ isOpen, onClose }) => {
           height: 100%;
           opacity: 0.85;
           overflow: hidden;
-          border-radius: 1.5rem;
         }
 
-        .radar-overlay-gradient {
+        .radar-full-overlay {
           position: absolute;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
           background: linear-gradient(180deg, 
-            rgba(10, 14, 26, 0.2) 0%,
+            rgba(10, 14, 26, 0.1) 0%,
             rgba(10, 14, 26, 0.05) 40%,
-            rgba(10, 14, 26, 0.3) 100%
+            rgba(10, 14, 26, 0.2) 100%
           );
           pointer-events: none;
-          border-radius: 1.5rem;
         }
 
         .confetti-container {
@@ -302,23 +278,27 @@ const RadarModal = ({ isOpen, onClose }) => {
           }
         }
 
-        /* Linux Terminal Style */
-        .terminal-container {
+        /* Fullscreen Terminal */
+        .terminal-fullscreen {
           position: relative;
           z-index: 5;
+          width: 95%;
+          max-width: 900px;
           background: rgba(0, 0, 0, 0.75);
-          border-radius: 10px;
-          border: 1px solid rgba(0, 255, 136, 0.15);
+          border-radius: 12px;
+          border: 1px solid rgba(0, 255, 136, 0.12);
           overflow: hidden;
           font-family: 'Courier New', monospace;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 60px rgba(0, 255, 136, 0.05);
           backdrop-filter: none;
           -webkit-backdrop-filter: none;
+          min-height: 200px;
+          max-height: 90vh;
         }
 
-        .terminal-header {
+        .terminal-header-full {
           background: rgba(20, 25, 35, 0.8);
-          padding: 0.5rem 1rem;
+          padding: 0.6rem 1.2rem;
           border-bottom: 1px solid rgba(0, 255, 136, 0.08);
           display: flex;
           align-items: center;
@@ -326,10 +306,11 @@ const RadarModal = ({ isOpen, onClose }) => {
         }
 
         .terminal-dot {
-          width: 10px;
-          height: 10px;
+          width: 12px;
+          height: 12px;
           border-radius: 50%;
           display: inline-block;
+          flex-shrink: 0;
         }
 
         .terminal-dot:first-child {
@@ -346,36 +327,58 @@ const RadarModal = ({ isOpen, onClose }) => {
 
         .terminal-title {
           color: #00ff88;
-          font-size: 0.7rem;
+          font-size: 0.85rem;
           letter-spacing: 0.05em;
           margin-left: 0.5rem;
           opacity: 0.7;
           font-family: 'Courier New', monospace;
+          flex: 1;
         }
 
-        .terminal-body {
-          padding: 1.2rem 1.2rem 1rem 1.2rem;
+        .terminal-close {
+          color: #ff5f56;
+          font-size: 1.2rem;
+          cursor: pointer;
+          opacity: 0.6;
+          transition: all 0.2s ease;
+          padding: 0 0.5rem;
+          margin-left: auto;
+        }
+
+        .terminal-close:hover {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+
+        .terminal-body-full {
+          padding: 1.5rem 1.8rem 1.2rem 1.8rem;
           min-height: 160px;
           position: relative;
           z-index: 5;
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
         }
 
-        .terminal-line {
+        .terminal-line-full {
           display: flex;
           align-items: center;
-          gap: 0.6rem;
-          padding: 0.15rem 0;
+          gap: 0.8rem;
+          padding: 0.2rem 0;
           color: #00ff88;
-          font-size: 0.9rem;
+          font-size: 1.1rem;
           line-height: 1.6;
           font-family: 'Courier New', monospace;
+          flex-wrap: wrap;
+          word-break: break-word;
         }
 
         .terminal-prompt {
           color: #00ff88;
           font-weight: 700;
           opacity: 0.9;
-          min-width: 14px;
+          min-width: 16px;
+          flex-shrink: 0;
         }
 
         .terminal-text {
@@ -383,35 +386,40 @@ const RadarModal = ({ isOpen, onClose }) => {
           word-break: break-word;
           text-shadow: 0 0 10px rgba(0, 255, 136, 0.05);
           font-family: 'Courier New', monospace;
+          font-size: 1.1rem;
+          flex: 1;
         }
 
         .terminal-cursor {
           color: #00ff88;
           animation: blink 0.8s step-end infinite;
           margin-left: 2px;
-          font-size: 1rem;
+          font-size: 1.1rem;
+          flex-shrink: 0;
         }
 
         .terminal-success {
           display: flex;
           align-items: center;
-          gap: 0.6rem;
+          gap: 0.8rem;
           padding: 0.3rem 0;
           color: #00ff88;
-          font-size: 0.9rem;
+          font-size: 1.05rem;
           animation: fadeIn 0.5s ease;
           font-family: 'Courier New', monospace;
+          flex-wrap: wrap;
         }
 
         .terminal-text-success {
           color: #00ff88;
           font-weight: 600;
+          word-break: break-word;
         }
 
         .terminal-celebration {
           text-align: center;
-          padding: 0.6rem 0;
-          font-size: 1.4rem;
+          padding: 0.8rem 0;
+          font-size: 1.6rem;
           font-weight: 700;
           background: linear-gradient(135deg, #FFD700, #FF6B6B, #FFD700);
           -webkit-background-clip: text;
@@ -420,48 +428,136 @@ const RadarModal = ({ isOpen, onClose }) => {
           animation: pulseGlow 1.5s ease-in-out infinite;
           text-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
           font-family: 'Courier New', monospace;
+          word-break: break-word;
         }
 
-        .close-wrap {
-          position: relative;
-          z-index: 5;
-          display: flex;
-          justify-content: flex-end;
-          margin-top: 1.2rem;
+        /* Responsive */
+        @media (max-width: 768px) {
+          .terminal-fullscreen {
+            width: 98%;
+            min-height: 160px;
+            max-height: 92vh;
+          }
+
+          .terminal-header-full {
+            padding: 0.5rem 0.8rem;
+          }
+
+          .terminal-dot {
+            width: 10px;
+            height: 10px;
+          }
+
+          .terminal-title {
+            font-size: 0.7rem;
+          }
+
+          .terminal-close {
+            font-size: 1rem;
+          }
+
+          .terminal-body-full {
+            padding: 1rem 1.2rem 0.8rem 1.2rem;
+            min-height: 130px;
+          }
+
+          .terminal-line-full {
+            font-size: 0.9rem;
+            gap: 0.6rem;
+          }
+
+          .terminal-text {
+            font-size: 0.9rem;
+          }
+
+          .terminal-prompt {
+            min-width: 14px;
+            font-size: 0.9rem;
+          }
+
+          .terminal-cursor {
+            font-size: 0.9rem;
+          }
+
+          .terminal-success {
+            font-size: 0.85rem;
+          }
+
+          .terminal-text-success {
+            font-size: 0.85rem;
+          }
+
+          .terminal-celebration {
+            font-size: 1.2rem;
+            padding: 0.6rem 0;
+          }
         }
 
-        .close-btn {
-          background: rgba(0, 255, 136, 0.08);
-          border: 1px solid rgba(0, 255, 136, 0.15);
-          color: #aaffcc;
-          padding: 0.5rem 1.8rem;
-          border-radius: 60px;
-          font-weight: 500;
-          font-size: 0.8rem;
-          letter-spacing: 0.03em;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          font-family: 'Courier New', monospace;
-          position: relative;
-          z-index: 5;
-        }
+        @media (max-width: 480px) {
+          .terminal-fullscreen {
+            width: 100%;
+            border-radius: 0;
+            min-height: 140px;
+            max-height: 95vh;
+          }
 
-        .close-btn:hover {
-          background: rgba(0, 255, 136, 0.15);
-          border-color: #00ff88;
-          color: #ffffff;
-          box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
-          transform: scale(1.05);
+          .terminal-header-full {
+            padding: 0.4rem 0.6rem;
+          }
+
+          .terminal-dot {
+            width: 8px;
+            height: 8px;
+          }
+
+          .terminal-title {
+            font-size: 0.6rem;
+          }
+
+          .terminal-close {
+            font-size: 0.9rem;
+          }
+
+          .terminal-body-full {
+            padding: 0.8rem 0.8rem 0.6rem 0.8rem;
+            min-height: 110px;
+          }
+
+          .terminal-line-full {
+            font-size: 0.75rem;
+            gap: 0.4rem;
+          }
+
+          .terminal-text {
+            font-size: 0.75rem;
+          }
+
+          .terminal-prompt {
+            min-width: 12px;
+            font-size: 0.75rem;
+          }
+
+          .terminal-cursor {
+            font-size: 0.75rem;
+          }
+
+          .terminal-success {
+            font-size: 0.7rem;
+          }
+
+          .terminal-text-success {
+            font-size: 0.7rem;
+          }
+
+          .terminal-celebration {
+            font-size: 1rem;
+            padding: 0.4rem 0;
+          }
         }
 
         @keyframes fadeIn {
           0% { opacity: 0; }
           100% { opacity: 1; }
-        }
-
-        @keyframes modalFloat {
-          0% { opacity: 0; transform: scale(0.95) translateY(15px); }
-          100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         @keyframes blink {
