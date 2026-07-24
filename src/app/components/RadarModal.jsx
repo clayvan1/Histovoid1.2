@@ -40,6 +40,7 @@ const RadarModal = ({ isOpen, onClose }) => {
     { text: "$ scanning 2026 season history.......", delay: 400, speed: 20 },
     { text: "$ archive gallery: end of era detected", delay: 500, speed: 18 },
     { text: "$ system ready — SEASON WRAP 2026 ", delay: 600, speed: 22 },
+    { text: "$ system ready — DC1 ", delay: 900, speed: 22 },
   ];
 
   // Generate confetti
@@ -340,11 +341,10 @@ const RadarModal = ({ isOpen, onClose }) => {
       {step === 'select' && (
         <div className="wheel-fullscreen-overlay">
           <div className="wheel-header">
-            <span className="wheel-title">✦ RADAR · 2026 ✦</span>
             <button className="wheel-close-btn" onClick={onClose}>✕</button>
           </div>
           <div className="wheel-prompt">
-            Choose a song to unlock the wrap 🎵
+            Choose a song to unlock the wrap 
           </div>
           <div className="wheel-sub-prompt">
             scroll to browse · click to select
@@ -354,7 +354,7 @@ const RadarModal = ({ isOpen, onClose }) => {
               items={songNames}
               defaultSelected={3}
               textColor="#a6a6a6"
-              activeColor="#00ff88"
+              
               side="left"
               fontSize={2.5}
               spacing={1.2}
