@@ -16,11 +16,40 @@ const RadarModal = ({ isOpen, onClose }) => {
   const [confettiPieces, setConfettiPieces] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioError, setAudioError] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [radarReady, setRadarReady] = useState(false);
   const containerRef = useRef(null);
   const animationRef = useRef();
   const audioRef = useRef(null);
   const wheelRef = useRef(null);
   const modalRef = useRef(null);
+
+  // Detect mobile and WebGL support
+  useEffect(() => {
+    const checkDevice = () => {
+      // Check if mobile device
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent);
+      const isSmallScreen = window.innerWidth < 768;
+      
+      // Check WebGL support
+      let webglSupported = false;
+      try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        webglSupported = !!gl;
+      } catch (e) {
+        webglSupported = false;
+      }
+      
+      setIsMobile(isMobileDevice || isSmallScreen || !webglSupported);
+      setRadarReady(true);
+    };
+    
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
 
   // Song list with real audio files from public folder
   const songs = [
@@ -33,13 +62,17 @@ const RadarModal = ({ isOpen, onClose }) => {
   ];
   const songNames = songs.map(s => s.name);
 
-  // CLI messages with Black American slang affirmations
+  // CLI messages with empowering affirmations
   const cliLines = [
     { text: "$ sudo radar --init", delay: 200, speed: 15 },
     { text: "$ scanning 2026 season history.......", delay: 400, speed: 20 },
     { text: "$ archive gallery: end of era detected", delay: 500, speed: 18 },
     { text: "$ system ready — SEASON WRAP 2026 ", delay: 600, speed: 22 },
-    { text: "$ DC1 ", delay: 600, speed: 22 },
+    { text: "$ you are the architect of your destiny ✨", delay: 800, speed: 25 },
+    { text: "$ greatness is not given, it is earned ⚡", delay: 1000, speed: 25 },
+    { text: "$ the future belongs to those who believe 🌟", delay: 1200, speed: 25 },
+    { text: "$ your only limit is your imagination 🚀", delay: 1400, speed: 25 },
+    { text: "$ you are writing history with every step 📝", delay: 1600, speed: 25 },
   ];
 
   // Generate confetti
@@ -293,24 +326,31 @@ const RadarModal = ({ isOpen, onClose }) => {
     >
       {/* Radar Background - Full screen with opacity */}
       <div className="radar-full-bg">
-        <Radar
-          speed={0.8}
-          scale={0.95}
-          ringCount={14}
-          spokeCount={16}
-          ringThickness={0.04}
-          spokeThickness={0.008}
-          sweepSpeed={0.6}
-          sweepWidth={1.5}
-          sweepLobes={1}
-          color="#00ff88"
-          fontSize={2.5}
-          backgroundColor="transparent"
-          falloff={2}
-          brightness={1.5}
-          enableMouseInteraction
-          mouseInfluence={0.15}
-        />
+        {!isMobile ? (
+          <Radar
+            speed={0.8}
+            scale={0.95}
+            ringCount={14}
+            spokeCount={16}
+            ringThickness={0.04}
+            spokeThickness={0.008}
+            sweepSpeed={0.6}
+            sweepWidth={1.5}
+            sweepLobes={1}
+            color="#00ff88"
+            fontSize={2.5}
+            backgroundColor="transparent"
+            falloff={2}
+            brightness={1.5}
+            enableMouseInteraction
+            mouseInfluence={0.15}
+          />
+        ) : (
+          // Fallback for mobile - simple gradient background
+          <div className="radar-fallback">
+            <div className="radar-fallback-glow"></div>
+          </div>
+        )}
       </div>
 
       {/* Translucent Overlay */}
@@ -341,11 +381,11 @@ const RadarModal = ({ isOpen, onClose }) => {
       {step === 'select' && (
         <div className="wheel-fullscreen-overlay">
           <div className="wheel-header">
-           
+            <span className="wheel-title">✦ RADAR · 2026 ✦</span>
             <button className="wheel-close-btn" onClick={onClose}>✕</button>
           </div>
           <div className="wheel-prompt">
-            Choose a song to unlock the wrap 
+            Choose a song to unlock the wrap 🎵
           </div>
           <div className="wheel-sub-prompt">
             scroll to browse · click to select
@@ -355,10 +395,10 @@ const RadarModal = ({ isOpen, onClose }) => {
               items={songNames}
               defaultSelected={3}
               textColor="#a6a6a6"
-              activeColor=""
+              activeColor="#00ff88"
               side="left"
               fontSize={2.5}
-              spacing={1.8}
+              spacing={1.2}
               curve={1.8}
               tilt={10}
               blur={2}
@@ -404,7 +444,7 @@ const RadarModal = ({ isOpen, onClose }) => {
                   <span className="terminal-text-success">✦ SYSTEM READY · 2026 WRAP COMPLETE ✦</span>
                 </div>
                 <div className="terminal-celebration">
-                   SEASON WRAP 2026 
+                  🎉 SEASON WRAP 2026 🎉
                 </div>
               </>
             )}
@@ -443,7 +483,7 @@ const RadarModal = ({ isOpen, onClose }) => {
           height: 100vh;
           z-index: 0;
           overflow: hidden;
-          background: transparent;
+          background: #0a0e1a;
           opacity: 0.9;
         }
 
@@ -453,6 +493,29 @@ const RadarModal = ({ isOpen, onClose }) => {
           position: absolute !important;
           top: 0 !important;
           left: 0 !important;
+        }
+
+        /* Fallback for mobile */
+        .radar-fallback {
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(ellipse at center, #00ff8815 0%, #0a0e1a 70%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .radar-fallback-glow {
+          width: 60%;
+          height: 60%;
+          background: radial-gradient(ellipse at center, #00ff8830 0%, transparent 70%);
+          animation: pulseGlow 3s ease-in-out infinite;
+          border-radius: 50%;
+        }
+
+        @keyframes pulseGlow {
+          0%, 100% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.2); opacity: 1; }
         }
 
         .modal-translucent-overlay {
