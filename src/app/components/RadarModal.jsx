@@ -3,24 +3,46 @@
 
 import { useState, useEffect, useRef } from "react";
 import Radar from "./Radar";
+import OptionWheel from "./OptionWheel";
+import "./OptionWheel.css";
 
 const RadarModal = ({ isOpen, onClose }) => {
+  const [step, setStep] = useState('select');
+  const [selectedSong, setSelectedSong] = useState(null);
+  const [selectedSongIndex, setSelectedSongIndex] = useState(null);
   const [typedLines, setTypedLines] = useState([]);
   const [allLinesComplete, setAllLinesComplete] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiPieces, setConfettiPieces] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioError, setAudioError] = useState(false);
   const containerRef = useRef(null);
   const animationRef = useRef();
+  const audioRef = useRef(null);
+  const wheelRef = useRef(null);
+  const modalRef = useRef(null);
 
-  // Linux terminal style CLI messages
+  // Song list with real audio files from public folder
+  const songs = [
+    { name: 'VivaLaVida', file: '/viva1.mp3' },
+    { name: 'Ambition', file: '/ambition.mp3' },
+    { name: 'Overtime', file: '/overtime.mp3' },
+    { name: 'BrighterDays', file: '/betterdays.mp3' },
+    { name: 'SaidNDone', file: '/said.mp3' },
+    { name: 'somaKijana', file: '/soma.mp3' },
+  ];
+  const songNames = songs.map(s => s.name);
+
+  // CLI messages with Black American slang affirmations
   const cliLines = [
     { text: "$ sudo radar --init", delay: 200, speed: 15 },
-    { text: "$ scanning 2026 season history...", delay: 400, speed: 20 },
+    { text: "$ scanning 2026 season history.......", delay: 400, speed: 20 },
     { text: "$ archive gallery: end of era detected", delay: 500, speed: 18 },
-    { text: "$ system ready — SEASON WRAP 2026 ✓", delay: 600, speed: 22 },
+    { text: "$ system ready — SEASON WRAP 2026 ", delay: 600, speed: 22 },
+    { text: "$ DC1 ", delay: 600, speed: 22 },
   ];
 
-  // Generate confetti pieces
+  // Generate confetti
   const generateConfetti = () => {
     const colors = [
       "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7",
@@ -28,22 +50,38 @@ const RadarModal = ({ isOpen, onClose }) => {
       "#FF6347", "#40E0D0", "#FF1493", "#00BFFF", "#FFA500"
     ];
     const pieces = [];
-    const numPieces = 300;
+    const numPieces = 400;
     for (let i = 0; i < numPieces; i++) {
       pieces.push({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * -100 - 20,
         rotation: Math.random() * 360,
-        size: Math.random() * 10 + 5,
+        size: Math.random() * 12 + 5,
         color: colors[Math.floor(Math.random() * colors.length)],
-        speed: Math.random() * 3 + 2,
-        wobble: Math.random() * 10,
+        speed: Math.random() * 4 + 2,
+        wobble: Math.random() * 12,
         wobbleSpeed: Math.random() * 0.05 + 0.02,
       });
     }
     setConfettiPieces(pieces);
     setShowConfetti(true);
+  };
+
+  // Play scroll sound
+  const playScrollSound = () => {
+    try {
+      if (!audioRef.current) {
+        audioRef.current = new Audio();
+        audioRef.current.src = '/assets/sounds/click-soft.mp3';
+        audioRef.current.volume = 0.15;
+        audioRef.current.load();
+      }
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    } catch (e) {
+      // Silently fail
+    }
   };
 
   // Animate confetti
@@ -71,21 +109,29 @@ const RadarModal = ({ isOpen, onClose }) => {
     };
   }, [showConfetti]);
 
-  // Reset confetti when modal reopens
+  // Reset when modal closes
   useEffect(() => {
     if (!isOpen) {
+      setStep('select');
+      setSelectedSong(null);
+      setSelectedSongIndex(null);
       setShowConfetti(false);
       setConfettiPieces([]);
       setAllLinesComplete(false);
       setTypedLines([]);
+      setIsPlaying(false);
+      setAudioError(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+      }
     }
   }, [isOpen]);
 
-  // Process CLI lines one by one
+  // Process CLI lines
   useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
+    if (step !== 'typing') return;
 
     let currentLineIndex = 0;
     let currentText = "";
@@ -126,37 +172,151 @@ const RadarModal = ({ isOpen, onClose }) => {
       clearTimeout(startTimeout);
       clearTimeout(timeoutId);
     };
+  }, [step]);
+
+  // Handle song selection - plays the song
+  const handleSongSelect = (index, songName) => {
+    const song = songs.find(s => s.name === songName);
+    if (!song) return;
+
+    setSelectedSong(songName);
+    setSelectedSongIndex(index);
+    setAudioError(false);
+    
+    // Play the selected song
+    try {
+      // Stop any existing audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      
+      // Create new audio instance
+      const audio = new Audio(song.file);
+      audio.volume = 0.7;
+      audio.loop = true;
+      
+      // Handle audio loading errors
+      audio.addEventListener('error', (e) => {
+        console.error('Audio loading error:', e);
+        setAudioError(true);
+        setIsPlaying(false);
+      });
+      
+      // Play the audio
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            audioRef.current = audio;
+          })
+          .catch((err) => {
+            console.log('Audio playback failed:', err);
+            setAudioError(true);
+            setIsPlaying(false);
+          });
+      }
+    } catch (e) {
+      console.log('Error playing song:', e);
+      setAudioError(true);
+      setIsPlaying(false);
+    }
+    
+    // Play click sound
+    try {
+      const clickAudio = new Audio('/assets/sounds/click-soft.mp3');
+      clickAudio.volume = 0.5;
+      clickAudio.play().catch(() => {});
+    } catch (e) {}
+    
+    setTimeout(() => {
+      setStep('typing');
+    }, 600);
+  };
+
+  // Handle scroll with sound - NO auto-selection
+  const handleWheelScroll = (e) => {
+    if (step === 'select') {
+      playScrollSound();
+    }
+  };
+
+  // Handle click outside modal content
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      // Stop audio when closing
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+      }
+      onClose();
+    }
+  };
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+          audioRef.current = null;
+        }
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="radar-modal-fullscreen" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      {/* Radar Background - Full screen */}
+    <div 
+      className="radar-modal-overlay" 
+      onClick={handleOverlayClick}
+      onWheel={handleWheelScroll}
+    >
+      {/* Radar Background - Full screen with opacity */}
       <div className="radar-full-bg">
         <Radar
           speed={0.8}
-          scale={0.9}
+          scale={0.95}
           ringCount={14}
           spokeCount={16}
           ringThickness={0.04}
           spokeThickness={0.008}
           sweepSpeed={0.6}
-          sweepWidth={2.5}
+          sweepWidth={1.5}
           sweepLobes={1}
           color="#00ff88"
-          backgroundColor="#0a0e1a"
+          fontSize={2.5}
+          backgroundColor="transparent"
           falloff={2}
-          brightness={1.8}
+          brightness={1.5}
           enableMouseInteraction
           mouseInfluence={0.15}
         />
       </div>
 
-      {/* Overlay gradient for text readability */}
-      <div className="radar-full-overlay"></div>
+      {/* Translucent Overlay */}
+      <div className="modal-translucent-overlay"></div>
 
-      {/* Confetti Container */}
+      {/* Confetti */}
       {showConfetti && (
         <div className="confetti-container">
           {confettiPieces.map((piece) => (
@@ -177,80 +337,139 @@ const RadarModal = ({ isOpen, onClose }) => {
         </div>
       )}
 
-      {/* Linux Terminal - Full width */}
-      <div className="terminal-fullscreen">
-        <div className="terminal-header-full">
-          <span className="terminal-dot"></span>
-          <span className="terminal-dot"></span>
-          <span className="terminal-dot"></span>
-          <span className="terminal-title">user@radar:~$</span>
-          <span className="terminal-close" onClick={onClose}>✕</span>
+      {/* Step 1: OptionWheel */}
+      {step === 'select' && (
+        <div className="wheel-fullscreen-overlay">
+          <div className="wheel-header">
+           
+            <button className="wheel-close-btn" onClick={onClose}>✕</button>
+          </div>
+          <div className="wheel-prompt">
+            Choose a song to unlock the wrap 
+          </div>
+          <div className="wheel-sub-prompt">
+            scroll to browse · click to select
+          </div>
+          <div className="wheel-fullscreen-container" ref={wheelRef}>
+            <OptionWheel
+              items={songNames}
+              defaultSelected={3}
+              textColor="#a6a6a6"
+              activeColor=""
+              side="left"
+              fontSize={2.5}
+              spacing={1.8}
+              curve={1.8}
+              tilt={10}
+              blur={2}
+              fade={0.12}
+              minOpacity={0.03}
+              smoothing={200}
+              inset={80}
+              loop={false}
+              draggable
+              onChange={handleSongSelect}
+            />
+          </div>
+          <div className="wheel-hint">
+            ✦ click any song to unlock your 2026 wrap ✦
+          </div>
         </div>
-        <div className="terminal-body-full">
-          {typedLines.map((line, index) => (
-            <div key={index} className="terminal-line-full">
-              <span className="terminal-prompt">$</span>
-              <span className="terminal-text">{line}</span>
-              {index === typedLines.length - 1 && !allLinesComplete && (
-                <span className="terminal-cursor">█</span>
-              )}
+      )}
+
+      {/* Step 2: CLI Terminal */}
+      {step === 'typing' && (
+        <div className="terminal-modal">
+          <div className="terminal-header">
+            <span className="terminal-dot"></span>
+            <span className="terminal-dot"></span>
+            <span className="terminal-dot"></span>
+            <span className="terminal-title">user@radar:~$</span>
+            <button className="terminal-close-btn" onClick={onClose}>✕</button>
+          </div>
+          <div className="terminal-body">
+            {typedLines.map((line, index) => (
+              <div key={index} className="terminal-line">
+                <span className="terminal-prompt">$</span>
+                <span className="terminal-text">{line}</span>
+                {index === typedLines.length - 1 && !allLinesComplete && (
+                  <span className="terminal-cursor">█</span>
+                )}
+              </div>
+            ))}
+            {allLinesComplete && (
+              <>
+                <div className="terminal-success">
+                  <span className="terminal-prompt">✔</span>
+                  <span className="terminal-text-success">✦ SYSTEM READY · 2026 WRAP COMPLETE ✦</span>
+                </div>
+                <div className="terminal-celebration">
+                   SEASON WRAP 2026 
+                </div>
+              </>
+            )}
+          </div>
+          {selectedSong && (
+            <div className="now-playing-bottom">
+              <span className="now-playing-icon">{isPlaying ? '▶' : audioError ? '⚠' : '⏸'}</span>
+              <span className="now-playing-text">
+                {audioError ? 'AUDIO UNAVAILABLE' : `NOW PLAYING: ${selectedSong.toUpperCase()}`}
+              </span>
+              <span className="now-playing-pulse">{isPlaying ? '●' : '○'}</span>
             </div>
-          ))}
-          {allLinesComplete && (
-            <>
-              <div className="terminal-success">
-                <span className="terminal-prompt">✔</span>
-                <span className="terminal-text-success">✦ SYSTEM READY · 2026 WRAP COMPLETE ✦</span>
-              </div>
-              <div className="terminal-celebration">
-                🎉 SEASON WRAP 2026 🎉
-              </div>
-            </>
           )}
         </div>
-      </div>
+      )}
 
       <style>{`
-        .radar-modal-fullscreen {
+        .radar-modal-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(2, 6, 18, 0.9);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          animation: fadeIn 0.6s ease;
+          z-index: 9999;
+          display: block;
+          animation: fadeIn 0.3s ease;
           overflow: hidden;
+          padding-top: 4rem;
+          background: transparent;
         }
 
         .radar-full-bg {
-          position: absolute;
+          position: fixed;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          width: 100%;
-          height: 100%;
-          opacity: 0.85;
+          width: 100vw;
+          height: 100vh;
+          z-index: 0;
           overflow: hidden;
+          background: transparent;
+          opacity: 0.9;
         }
 
-        .radar-full-overlay {
-          position: absolute;
+        .radar-full-bg > div {
+          width: 100% !important;
+          height: 100% !important;
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+        }
+
+        .modal-translucent-overlay {
+          position: fixed;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          background: linear-gradient(180deg, 
-            rgba(10, 14, 26, 0.1) 0%,
-            rgba(10, 14, 26, 0.05) 40%,
-            rgba(10, 14, 26, 0.2) 100%
-          );
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.3);
+          z-index: 1;
           pointer-events: none;
         }
 
         .confetti-container {
-          position: absolute;
+          position: fixed;
           top: 0;
           left: 0;
           right: 0;
@@ -278,31 +497,154 @@ const RadarModal = ({ isOpen, onClose }) => {
           }
         }
 
-        /* Fullscreen Terminal */
-        .terminal-fullscreen {
-          position: relative;
+        .wheel-fullscreen-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 5;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 2rem 3rem;
+          width: 100vw;
+          height: 100vh;
+          padding-top: 6rem;
+          pointer-events: none;
+        }
+
+        .wheel-fullscreen-overlay > * {
+          pointer-events: auto;
+        }
+
+        .wheel-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          max-width: 900px;
+          padding: 0.5rem 0 1rem 0;
+          border-bottom: 1px solid rgba(0, 255, 136, 0.05);
+          flex-shrink: 0;
+          margin-top: 0;
+        }
+
+        .wheel-title {
+          color: #00ff88;
+          font-size: 1.3rem;
+          font-weight: 700;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.1em;
+          text-shadow: 0 0 30px rgba(0, 255, 136, 0.15);
+        }
+
+        .wheel-close-btn {
+          background: none;
+          border: none;
+          color: #ff5f56;
+          font-size: 1.5rem;
+          cursor: pointer;
+          opacity: 0.5;
+          transition: all 0.2s ease;
+          padding: 0 0.5rem;
+          font-family: 'Courier New', monospace;
+        }
+
+        .wheel-close-btn:hover {
+          opacity: 1;
+          transform: scale(1.15);
+        }
+
+        .wheel-prompt {
+          text-align: center;
+          font-size: 1.6rem;
+          font-weight: 600;
+          color: #aaffcc;
+          font-family: 'Courier New', monospace;
+          letter-spacing: 0.05em;
+          opacity: 0.95;
+          text-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+          padding: 0.3rem 0 0.1rem 0;
+          flex-shrink: 0;
+        }
+
+        .wheel-sub-prompt {
+          text-align: center;
+          font-size: 0.9rem;
+          color: #6a9eff;
+          opacity: 0.5;
+          letter-spacing: 0.08em;
+          font-family: 'Courier New', monospace;
+          padding-bottom: 0.5rem;
+          flex-shrink: 0;
+        }
+
+        .wheel-fullscreen-container {
+          width: 100%;
+          max-width: 900px;
+          height: 450px;
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.5rem 0;
+          min-height: 300px;
+        }
+
+        .wheel-fullscreen-container > div {
+          width: 100%;
+          height: 100%;
+        }
+
+        .wheel-hint {
+          text-align: center;
+          font-size: 0.8rem;
+          color: #00ff88;
+          opacity: 0.35;
+          letter-spacing: 0.1em;
+          font-family: 'Courier New', monospace;
+          padding-top: 0.5rem;
+          animation: pulseHint 2.5s ease-in-out infinite;
+          flex-shrink: 0;
+        }
+
+        @keyframes pulseHint {
+          0%, 100% { opacity: 0.25; }
+          50% { opacity: 0.6; }
+        }
+
+        .terminal-modal {
+          position: fixed;
           z-index: 5;
           width: 95%;
           max-width: 900px;
-          background: rgba(0, 0, 0, 0.75);
-          border-radius: 12px;
+          max-height: 85vh;
+          background: rgba(0, 0, 0, 0.5);
+          border-radius: 16px;
           border: 1px solid rgba(0, 255, 136, 0.12);
           overflow: hidden;
           font-family: 'Courier New', monospace;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 60px rgba(0, 255, 136, 0.05);
-          backdrop-filter: none;
-          -webkit-backdrop-filter: none;
-          min-height: 200px;
-          max-height: 90vh;
+          box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7);
+          display: flex;
+          flex-direction: column;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          margin-top: 0;
         }
 
-        .terminal-header-full {
-          background: rgba(20, 25, 35, 0.8);
-          padding: 0.6rem 1.2rem;
-          border-bottom: 1px solid rgba(0, 255, 136, 0.08);
+        .terminal-header {
+          background: rgba(20, 25, 35, 0.6);
+          padding: 0.8rem 1.5rem;
+          border-bottom: 1px solid rgba(0, 255, 136, 0.06);
           display: flex;
           align-items: center;
           gap: 0.6rem;
+          flex-shrink: 0;
         }
 
         .terminal-dot {
@@ -330,37 +672,39 @@ const RadarModal = ({ isOpen, onClose }) => {
           font-size: 0.85rem;
           letter-spacing: 0.05em;
           margin-left: 0.5rem;
-          opacity: 0.7;
+          opacity: 0.8;
           font-family: 'Courier New', monospace;
           flex: 1;
         }
 
-        .terminal-close {
+        .terminal-close-btn {
+          background: none;
+          border: none;
           color: #ff5f56;
           font-size: 1.2rem;
           cursor: pointer;
-          opacity: 0.6;
+          opacity: 0.5;
           transition: all 0.2s ease;
           padding: 0 0.5rem;
-          margin-left: auto;
+          font-family: 'Courier New', monospace;
         }
 
-        .terminal-close:hover {
+        .terminal-close-btn:hover {
           opacity: 1;
-          transform: scale(1.2);
+          transform: scale(1.15);
         }
 
-        .terminal-body-full {
-          padding: 1.5rem 1.8rem 1.2rem 1.8rem;
+        .terminal-body {
+          padding: 1.5rem 2rem 1.2rem 2rem;
           min-height: 160px;
-          position: relative;
-          z-index: 5;
           display: flex;
           flex-direction: column;
           gap: 0.2rem;
+          flex: 1;
+          overflow-y: auto;
         }
 
-        .terminal-line-full {
+        .terminal-line {
           display: flex;
           align-items: center;
           gap: 0.8rem;
@@ -426,21 +770,114 @@ const RadarModal = ({ isOpen, onClose }) => {
           -webkit-text-fill-color: transparent;
           background-clip: text;
           animation: pulseGlow 1.5s ease-in-out infinite;
-          text-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
           font-family: 'Courier New', monospace;
           word-break: break-word;
         }
 
-        /* Responsive */
+        .now-playing-bottom {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+          padding: 0.6rem 1.5rem;
+          border-top: 1px solid rgba(0, 255, 136, 0.06);
+          background: rgba(0, 255, 136, 0.03);
+          flex-shrink: 0;
+          font-family: 'Courier New', monospace;
+          animation: fadeIn 0.5s ease;
+        }
+
+        .now-playing-icon {
+          color: #00ff88;
+          font-size: 0.9rem;
+          animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .now-playing-text {
+          color: #aaffcc;
+          font-size: 0.85rem;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          flex: 1;
+        }
+
+        .now-playing-pulse {
+          color: #00ff88;
+          font-size: 0.6rem;
+          animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
+        }
+
+        @keyframes fadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+
+        @keyframes blink {
+          0%, 50% { opacity: 1; }
+          51%, 100% { opacity: 0; }
+        }
+
+        @keyframes pulseGlow {
+          0%, 100% { opacity: 0.8; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.03); }
+        }
+
+        @media (max-width: 1024px) {
+          .wheel-fullscreen-container {
+            height: 400px;
+          }
+        }
+
         @media (max-width: 768px) {
-          .terminal-fullscreen {
-            width: 98%;
-            min-height: 160px;
-            max-height: 92vh;
+          .radar-modal-overlay {
+            padding-top: 3rem;
           }
 
-          .terminal-header-full {
-            padding: 0.5rem 0.8rem;
+          .wheel-fullscreen-overlay {
+            padding: 1rem 1.5rem;
+            padding-top: 4rem;
+          }
+
+          .wheel-header {
+            padding: 0.3rem 0 0.8rem 0;
+          }
+
+          .wheel-title {
+            font-size: 1rem;
+          }
+
+          .wheel-close-btn {
+            font-size: 1.2rem;
+          }
+
+          .wheel-prompt {
+            font-size: 1.2rem;
+          }
+
+          .wheel-sub-prompt {
+            font-size: 0.75rem;
+          }
+
+          .wheel-fullscreen-container {
+            height: 350px;
+            min-height: 250px;
+          }
+
+          .wheel-hint {
+            font-size: 0.65rem;
+          }
+
+          .terminal-modal {
+            width: 98%;
+            max-height: 90vh;
+          }
+
+          .terminal-header {
+            padding: 0.5rem 1rem;
           }
 
           .terminal-dot {
@@ -452,16 +889,12 @@ const RadarModal = ({ isOpen, onClose }) => {
             font-size: 0.7rem;
           }
 
-          .terminal-close {
-            font-size: 1rem;
-          }
-
-          .terminal-body-full {
+          .terminal-body {
             padding: 1rem 1.2rem 0.8rem 1.2rem;
             min-height: 130px;
           }
 
-          .terminal-line-full {
+          .terminal-line {
             font-size: 0.9rem;
             gap: 0.6rem;
           }
@@ -491,18 +924,63 @@ const RadarModal = ({ isOpen, onClose }) => {
             font-size: 1.2rem;
             padding: 0.6rem 0;
           }
+
+          .now-playing-bottom {
+            padding: 0.4rem 1rem;
+          }
+
+          .now-playing-text {
+            font-size: 0.7rem;
+          }
         }
 
         @media (max-width: 480px) {
-          .terminal-fullscreen {
-            width: 100%;
-            border-radius: 0;
-            min-height: 140px;
-            max-height: 95vh;
+          .radar-modal-overlay {
+            padding-top: 2.5rem;
           }
 
-          .terminal-header-full {
-            padding: 0.4rem 0.6rem;
+          .wheel-fullscreen-overlay {
+            padding: 0.8rem 1rem;
+            padding-top: 3rem;
+          }
+
+          .wheel-header {
+            padding: 0.2rem 0 0.6rem 0;
+          }
+
+          .wheel-title {
+            font-size: 0.8rem;
+          }
+
+          .wheel-close-btn {
+            font-size: 1rem;
+          }
+
+          .wheel-prompt {
+            font-size: 0.95rem;
+          }
+
+          .wheel-sub-prompt {
+            font-size: 0.6rem;
+          }
+
+          .wheel-fullscreen-container {
+            height: 280px;
+            min-height: 200px;
+          }
+
+          .wheel-hint {
+            font-size: 0.5rem;
+          }
+
+          .terminal-modal {
+            width: 100%;
+            border-radius: 0;
+            max-height: 100vh;
+          }
+
+          .terminal-header {
+            padding: 0.4rem 0.8rem;
           }
 
           .terminal-dot {
@@ -514,16 +992,16 @@ const RadarModal = ({ isOpen, onClose }) => {
             font-size: 0.6rem;
           }
 
-          .terminal-close {
-            font-size: 0.9rem;
+          .terminal-close-btn {
+            font-size: 1rem;
           }
 
-          .terminal-body-full {
+          .terminal-body {
             padding: 0.8rem 0.8rem 0.6rem 0.8rem;
             min-height: 110px;
           }
 
-          .terminal-line-full {
+          .terminal-line {
             font-size: 0.75rem;
             gap: 0.4rem;
           }
@@ -550,24 +1028,25 @@ const RadarModal = ({ isOpen, onClose }) => {
           }
 
           .terminal-celebration {
-            font-size: 1rem;
+            font-size: 0.9rem;
             padding: 0.4rem 0;
           }
-        }
 
-        @keyframes fadeIn {
-          0% { opacity: 0; }
-          100% { opacity: 1; }
-        }
+          .now-playing-bottom {
+            padding: 0.3rem 0.8rem;
+          }
 
-        @keyframes blink {
-          0%, 50% { opacity: 1; }
-          51%, 100% { opacity: 0; }
-        }
+          .now-playing-text {
+            font-size: 0.6rem;
+          }
 
-        @keyframes pulseGlow {
-          0%, 100% { opacity: 0.8; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.05); }
+          .now-playing-icon {
+            font-size: 0.6rem;
+          }
+
+          .now-playing-pulse {
+            font-size: 0.4rem;
+          }
         }
       `}</style>
     </div>
