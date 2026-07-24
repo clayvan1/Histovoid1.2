@@ -308,7 +308,7 @@ const RadarModal = ({ isOpen, onClose }) => {
           backgroundColor="#0a0e1a"
           falloff={2}
           brightness={1.8}
-          enableMouseInteraction={false}
+          enableMouseInteraction={true}
           mouseInfluence={0.15}
         />
       </div>
@@ -353,8 +353,8 @@ const RadarModal = ({ isOpen, onClose }) => {
             <OptionWheel
               items={songNames}
               defaultSelected={3}
-              textColor="#a6a6a6"
               
+               textColor="#aaffcc" 
               side="left"
               fontSize={2.5}
               spacing={1.2}
