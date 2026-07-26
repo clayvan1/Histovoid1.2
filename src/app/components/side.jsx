@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import GlassSurface from "./GlassSurface";
 import "./Sidebar.css";
 
 // Icons
@@ -9,15 +8,17 @@ import { FaHome } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import Link from "next/link";
 
-// ✅ Full navItems array
+// ✅ Full navItems array with unique IDs
 const navItems = [
   {
+    id: "home",
     label: "Home",
     icon: <FaHome />,
     path: "/",
     subLinks: null,
   },
   {
+    id: "epithelial",
     label: "EPITHELIAL TISSUE",
     subLinks: [
       { label: "SQUAMOUS", path: "/epithelium" },
@@ -27,6 +28,7 @@ const navItems = [
     ],
   },
   {
+    id: "connective",
     label: "CONNECTIVE TISSUE",
     subLinks: [
       { label: "EMBRYONIC", path: "/connective" },
@@ -35,6 +37,7 @@ const navItems = [
     ],
   },
   {
+    id: "cartilage",
     label: "CARTILAGE",
     subLinks: [
       { label: "HYALINE", path: "/cartilage" },
@@ -43,6 +46,7 @@ const navItems = [
     ],
   },
   {
+    id: "bone",
     label: "BONE",
     subLinks: [
       { label: "TRABECULAR", path: "/bone" },
@@ -51,6 +55,7 @@ const navItems = [
     ],
   },
   {
+    id: "nervous_tissue",
     label: "NERVOUS TISSUE",
     subLinks: [
       { label: "PYRAMIDAL", path: "/nervous" },
@@ -60,6 +65,7 @@ const navItems = [
     ],
   },
   {
+    id: "propulsion",
     label: "PROPULSION TISSUE",
     subLinks: [
       { label: "SKELETAL", path: "/propulsion" },
@@ -68,6 +74,7 @@ const navItems = [
     ],
   },
   {
+    id: "skin",
     label: "SKIN AND APPENDAGES",
     subLinks: [
       { label: "SKIN", path: "/skin" },
@@ -76,6 +83,7 @@ const navItems = [
     ],
   },
   {
+    id: "nervous_system",
     label: "NERVOUS SYSTEM",
     subLinks: [
       { label: "CEREBRAL CORTEX", path: "/nervoussystem" },
@@ -86,6 +94,7 @@ const navItems = [
     ],
   },
   {
+    id: "receptors",
     label: "RECEPTORS SYSTEM",
     subLinks: [
       { label: "GENERAL RECEPTORS", path: "/receptors" },
@@ -96,10 +105,12 @@ const navItems = [
     ],
   },
   {
+    id: "ear",
     label: "EAR",
     subLinks: [{ label: "INTERNAL EAR", path: "/ear" }],
   },
   {
+    id: "eye",
     label: "EYE",
     subLinks: [
       { label: "SCLERA", path: "/eye" },
@@ -112,6 +123,7 @@ const navItems = [
     ],
   },
   {
+    id: "endocrine",
     label: "ENDOCRINE SYSTEM",
     subLinks: [
       { label: "PITUITARY", path: "/endocrine" },
@@ -122,6 +134,7 @@ const navItems = [
     ],
   },
   {
+    id: "git",
     label: "GIT",
     subLinks: [
       { label: "LIP", path: "/git" },
@@ -134,6 +147,7 @@ const navItems = [
     ],
   },
   {
+    id: "git_glands",
     label: "GIT GLANDS",
     subLinks: [
       { label: "SALIVARY GLANDS", path: "/gitglands" },
@@ -143,6 +157,7 @@ const navItems = [
     ],
   },
   {
+    id: "respiratory",
     label: "RESPIRATORY SYSTEM",
     subLinks: [
       { label: "NASAL CAVITY", path: "/respiratory" },
@@ -152,6 +167,7 @@ const navItems = [
     ],
   },
   {
+    id: "cardiovascular",
     label: "CARDIOVASCULAR SYSTEM",
     subLinks: [
       { label: "BLOOD VESSEL", path: "/cardio" },
@@ -159,6 +175,7 @@ const navItems = [
     ],
   },
   {
+    id: "immune",
     label: "IMMUNE SYSTEM",
     subLinks: [
       { label: "LYMP NODE", path: "/immune" },
@@ -168,6 +185,7 @@ const navItems = [
     ],
   },
   {
+    id: "urinary",
     label: "URINARY SYSTEM",
     subLinks: [
       { label: "KIDNEY", path: "/urinary" },
@@ -178,6 +196,7 @@ const navItems = [
     ],
   },
   {
+    id: "reproductive",
     label: "REPRODUCTIVE SYSTEM",
     subLinks: [
       { label: "MALE", path: "/reproductive" },
@@ -201,8 +220,8 @@ export default function Sidebar({ open, setOpen }) {
     };
   }, [open]);
 
-  const handleDropdownToggle = (index) => {
-    setOpenDropdown(openDropdown === index ? null : index);
+  const handleDropdownToggle = (id) => {
+    setOpenDropdown(openDropdown === id ? null : id);
   };
 
   const sidebarClassName = `sidebar-container ${open ? "open" : ""}`;
@@ -219,12 +238,12 @@ export default function Sidebar({ open, setOpen }) {
       <div className={sidebarClassName}>
         <div className="sidebar-scroll-area">
           <nav className="sidebar-nav">
-            {navItems.map((item, index) => (
-              <div className="nav-item" key={index}>
+            {navItems.map((item) => (
+              <div className="nav-item" key={item.id}>
                 {item.subLinks ? (
                   <>
                     <div
-                      onClick={() => handleDropdownToggle(index)}
+                      onClick={() => handleDropdownToggle(item.id)}
                       className="nav-link"
                     >
                       <div className="nav-link-content">
@@ -233,14 +252,14 @@ export default function Sidebar({ open, setOpen }) {
                       </div>
                       <IoIosArrowDown
                         className={`dropdown-arrow ${
-                          openDropdown === index ? "open" : ""
+                          openDropdown === item.id ? "open" : ""
                         }`}
                       />
                     </div>
 
                     <div
                       className={`submenu ${
-                        openDropdown === index ? "open" : ""
+                        openDropdown === item.id ? "open" : ""
                       }`}
                     >
                       <div className="submenu-list">
