@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   
   // Vercel specific optimizations
   output: 'standalone',
@@ -31,7 +30,6 @@ const nextConfig = {
   },
   
   // Vercel deployment settings
-  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
